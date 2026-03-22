@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+build/
+dist/
+.env
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Runtime/generated
+sounds_v1/
+sounds_v3/
+backups/
+*.bak
+*.tmp
+
+# PyInstaller
+*.spec
+
+# Matplotlib cache
+.matplotlib/
+
+# Test/cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local app data
+auth.json
+schedules.json
