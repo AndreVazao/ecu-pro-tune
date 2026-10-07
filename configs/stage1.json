@@ -1,0 +1,8 @@
+{
+  "Profile_Name": "Stage 1",
+  "rpm_limit": 6800,
+  "boost_target": 1.15,
+  "fuel_trim": 0.0,
+  "ignition_trim": 0.0,
+  "map": "stage1_map.json"
+}
