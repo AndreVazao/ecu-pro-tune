@@ -5,33 +5,37 @@
 ### Sincronização
 - Repositório local: C:\ProgramasGodMode\ecu-pro-tune
 - Remote: AndreVazao/ecu-pro-tune
-- main local sincronizado com origin/main antes da nova implementação.
-- Nenhuma alteração local pré-existente foi sobrescrita.
-- AndreOS Memory também foi atualizado via pull fast-forward; o diretório local não versionado andreos-memory foi preservado.
+- main local sincronizado com origin/main antes da implementação.
+- Fase publicada no GitHub em b6900ed.
+- AndreOS Memory: AndreVazao/andreos-memory.
+- Checkpoint de memória publicado em 224b071.
+- Diretório local não versionado andreos-memory foi preservado.
 
-### Implementação desta fase
-- GUI base ttkbootstrap com modos Performance e Showcase.
-- Dashboard operacional com estado, RPM, carga e boost em simulação.
-- Gestor de perfis e carregamento de mapas.
-- Editor de mapa numérico com validação e limites.
-- Gráfico live com matplotlib.
-- Backup de perfil e rollback manager.
-- Perfil Stage 1 de demonstração.
+### Implementação
+- GUI ttkbootstrap.
+- Modos Performance e Showcase.
+- Dashboard com telemetria simulada.
+- ProfileManager, ECUManager, Scheduler, RollbackManager, SoundManager e Logger.
+- MapEditor, validators e live graph.
+- Perfil Stage 1 e mapa de demonstração.
 - Estrutura de packages Python.
-- Ambiente virtual .venv para isolamento das dependências.
-
-### Segurança
-A aplicação atual é uma camada de gestão, visualização e simulação. Não existe driver de escrita física de ECU nesta fase. A interface não deve ser interpretada como autorização para gravar firmware ou calibração num veículo.
+- Ambiente .venv isolado.
+- Installer, teste e build scripts Windows.
 
 ### Validação
-- compileall do código fonte passou.
-- O ambiente global do Python apresentou falha de DLL no NumPy; por isso o projeto passou a usar .venv como ambiente isolado.
-- A validação final das dependências será executada dentro do .venv.
+- compileall: PASS.
+- import da aplicação: PASS.
+- pytest: 4 passed.
+- NumPy 1.26.4 e Matplotlib 3.9.4 validados no .venv.
+- FFmpeg: não presente no ambiente no momento da validação; installer tenta instalar via winget quando disponível.
+
+### Segurança
+A aplicação atual é gestão, visualização e simulação. Não existe driver de escrita física nem rotina de flash. Qualquer futura integração de hardware deverá ser isolada, explicitamente validada e bloqueada por defeito.
 
 ### Próximos gates
-1. Fechar testes automatizados dos managers.
-2. Fechar instalador Windows.
-3. Fechar assets sonoros e fallback silencioso.
-4. Melhorar dashboard e navegação.
-5. Empacotar EXE.
-6. Só depois avaliar adapters de hardware isolados, com testes explícitos e sem escrita física por defeito.
+1. Sons e fallback.
+2. Dashboard avançado.
+3. Installer/FFmpeg robusto.
+4. Empacotamento EXE.
+5. Testes de integração.
+6. Só depois adapters de hardware isolados e sem escrita física por defeito.
