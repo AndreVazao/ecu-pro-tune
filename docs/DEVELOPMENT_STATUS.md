@@ -2,13 +2,14 @@
 
 ## 2026-10-07
 
-### Sincronização
+### Sincronização e publicação
 - Repositório local: C:\ProgramasGodMode\ecu-pro-tune
 - Remote: AndreVazao/ecu-pro-tune
 - main local sincronizado com origin/main antes da implementação.
-- Fase publicada no GitHub em b6900ed.
+- Implementação publicada em b6900ed.
+- Documentação publicada em 3f18860.
 - AndreOS Memory: AndreVazao/andreos-memory.
-- Checkpoint de memória publicado em 224b071.
+- Checkpoints de memória publicados em 224b071 e 8b06bd7.
 - Diretório local não versionado andreos-memory foi preservado.
 
 ### Implementação
