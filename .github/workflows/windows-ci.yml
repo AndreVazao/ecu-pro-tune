@@ -89,6 +89,9 @@ jobs:
           --clean
           --windowed
           --name ECUProTune
+          --paths .
+          --add-data "configs;configs"
+          --add-data "maps;maps"
           --collect-all ttkbootstrap
           --collect-all matplotlib
           src/app/main.py
@@ -103,6 +106,19 @@ jobs:
           }
           Get-Item $exe | Format-List FullName, Length, LastWriteTime
 
+      - name: Smoke test packaged application startup
+        shell: pwsh
+        run: |
+          $exe = (Resolve-Path "dist/ECUProTune/ECUProTune.exe").Path
+          $process = Start-Process -FilePath $exe -PassThru
+          Start-Sleep -Seconds 8
+          $process.Refresh()
+          if ($process.HasExited) {
+            Write-Error "Packaged application exited during startup (exit code $($process.ExitCode))."
+            exit 1
+          }
+          Stop-Process -Id $process.Id -Force
+
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
@@ -116,8 +132,8 @@ jobs:
         shell: pwsh
         run: |
           "## ECU Pro Tune - Windows CI" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "- Commit: `$env:GITHUB_SHA`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "- Branch/ref: `$env:GITHUB_REF`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "- Runner: `$env:RUNNER_OS`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Commit: $env:GITHUB_SHA" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Branch/ref: $env:GITHUB_REF" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Runner: $env:RUNNER_OS" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "- Python: 3.11" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "- Build artifact: ECUProTune-Windows-Python311 (14 days)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
