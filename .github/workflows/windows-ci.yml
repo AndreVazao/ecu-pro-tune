@@ -1,0 +1,123 @@
+name: ECU Pro Tune - Windows CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ecu-pro-tune-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-validation:
+    name: Windows / Python 3.11
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Upgrade pip tooling
+        run: python -m pip install --upgrade pip setuptools wheel
+
+      - name: Install project dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Verify dependency consistency
+        run: python -m pip check
+
+      - name: Compile all Python modules
+        run: python -m compileall -q src tests
+
+      - name: Run unit tests
+        env:
+          MPLBACKEND: Agg
+        run: python -m pytest -q
+
+      - name: Smoke test application and dashboard imports
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python -c "from src.app.main import ECUProTuneApp; from src.app.dashboard import Dashboard; from src.core.sound_manager import SoundManager; print('Application imports: OK')"
+
+      - name: Smoke test Tk dashboard construction
+        env:
+          MPLBACKEND: Agg
+        shell: pwsh
+        run: |
+          @'
+          import logging
+          import tkinter as tk
+          import ttkbootstrap as ttk
+          from src.app.dashboard import Dashboard
+
+          root = ttk.Window(themename="darkly")
+          root.withdraw()
+          dashboard = Dashboard(root, "performance", logging.getLogger("ci-dashboard"))
+          dashboard.pack(fill="both", expand=True)
+          root.update_idletasks()
+          root.update()
+          dashboard.destroy()
+          root.destroy()
+          print("Tk dashboard construction: OK")
+          '@ | python -
+
+      - name: Install PyInstaller
+        run: python -m pip install pyinstaller
+
+      - name: Build Windows executable
+        run: >-
+          python -m PyInstaller
+          --noconfirm
+          --clean
+          --windowed
+          --name ECUProTune
+          --collect-all ttkbootstrap
+          --collect-all matplotlib
+          src/app/main.py
+
+      - name: Verify executable exists
+        shell: pwsh
+        run: |
+          $exe = "dist/ECUProTune/ECUProTune.exe"
+          if (-not (Test-Path $exe)) {
+            Write-Error "Expected executable not found: $exe"
+            exit 1
+          }
+          Get-Item $exe | Format-List FullName, Length, LastWriteTime
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ECUProTune-Windows-Python311
+          path: dist/ECUProTune/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Write CI summary
+        if: always()
+        shell: pwsh
+        run: |
+          "## ECU Pro Tune - Windows CI" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Commit: `$env:GITHUB_SHA`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Branch/ref: `$env:GITHUB_REF`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Runner: `$env:RUNNER_OS`" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Python: 3.11" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Build artifact: ECUProTune-Windows-Python311 (14 days)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
