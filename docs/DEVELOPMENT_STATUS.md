@@ -1,14 +1,22 @@
 # ECU Pro Tune — Development Status
 
-## 2026-11-08 — Dashboard avançado (em validação)
+## 2026-11-13 — Windows CI / Actions (em execução após push)
 - Branch de trabalho: feature/dashboard-advanced-20261108.
+- Workflow: .github/workflows/windows-ci.yml.
+- Commit do workflow: 2cfbbb2d16ada4c32eaaacda2c1f293e8479cae3.
+- Runner: windows-latest, Python 3.11.
+- Pipeline: instalar requirements, pip check, compileall, pytest, smoke imports, construir dashboard Tkinter, build PyInstaller e upload do artefacto.
+- Artefacto: ECUProTune-Windows-Python311, retenção de 14 dias.
+- Triggers: push em main/feature/**, pull_request para main e workflow_dispatch.
+- A execução ainda precisa de terminar para confirmar o resultado; a criação/publicação do YAML não equivale a testes aprovados.
+
+## 2026-11-08 — Dashboard avançado (em validação)
 - Commit de implementação: 6d28e3c.
 - Dashboard atualizado com seis métricas simuladas, medidores circulares RPM/boost, gráfico rolling de RPM e monitor de sistema.
 - Navegação para Perfis/Mapas mantida; foi adicionada ação para regressar ao dashboard.
 - Atualização de telemetria limitada a 400 ms; histórico limitado a 90 amostras.
 - Identidade visual azul/ciano/preto/cinza, sem dependências novas.
 - Segurança mantida: apenas simulação local; sem escrita física, driver ECU ou rotina de flash.
-- Validação local pendente: o dispositivo PC-Vazao-Anjos estava offline durante esta sessão. Não executar merge para main até compilar, testar e abrir a GUI no .venv.
 
 ## Checkpoints anteriores
 - Repo: AndreVazao/ecu-pro-tune.
@@ -38,9 +46,9 @@
 A aplicação atual é gestão, visualização e simulação. Não existe driver de escrita física nem rotina de flash. Qualquer futura integração de hardware deverá ser isolada, explicitamente validada e bloqueada por defeito.
 
 ## Próximos gates
-1. Validar dashboard avançado no PC: compileall, pytest e abertura da GUI.
-2. Corrigir eventuais problemas visuais/funcionais e integrar em main via PR.
-3. Installer/FFmpeg robusto.
-4. Empacotamento EXE.
-5. Testes de integração.
+1. Acompanhar o primeiro run do Windows CI; corrigir falhas no pipeline ou na aplicação.
+2. Confirmar que o EXE inicia no runner e que o artefacto fica disponível.
+3. Abrir PR da branch para main só depois de CI verde e revisão dos resultados.
+4. Endurecer installer/FFmpeg.
+5. Testes de integração adicionais.
 6. Só depois adapters de hardware isolados e sem escrita física por defeito.
