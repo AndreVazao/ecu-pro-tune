@@ -3,7 +3,7 @@
 ## 2026-11-13 — Windows CI / Actions (em execução após push)
 - Branch de trabalho: feature/dashboard-advanced-20261108.
 - Workflow: .github/workflows/windows-ci.yml.
-- Commit do workflow: 2cfbbb2d16ada4c32eaaacda2c1f293e8479cae3.
+- Commit do workflow: 940c7ecd5c26eb9a4ea1e66935b53cba00a44d65.
 - Runner: windows-latest, Python 3.11.
 - Pipeline: instalar requirements, pip check, compileall, pytest, smoke imports, construir dashboard Tkinter, build PyInstaller e upload do artefacto.
 - Artefacto: ECUProTune-Windows-Python311, retenção de 14 dias.
