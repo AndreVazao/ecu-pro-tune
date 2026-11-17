@@ -1,5 +1,27 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #4 integrado / release Windows versionada
+- PR #4 — build: harden Windows installer and packaging workflow — merged em main.
+- Merge commit: ee82b350a6b3bb48915f595389366045082c2ab6.
+- CI pós-merge da main: run #43, 44037630731 — SUCCESS.
+- Nova branch: feature/release-packaging-20261117.
+- Versão inicial do produto: 0.1.0; VERSION e src/version.py são mantidos sincronizados por teste.
+- Janela da aplicação apresenta a versão.
+- Novo scripts/package_release.ps1 valida ECUProTune.exe, a pasta _internal e VERSION; cria ZIP onedir versionado, BUILD-MANIFEST.json e SHA256SUMS.txt.
+- O script calcula e verifica SHA-256; CI repete a verificação antes do upload.
+- Windows CI atualizado para publicar release/ em vez da pasta de build solta.
+- build_exe.bat também gera o pacote versionado localmente.
+- Release ZIP: ECUProTune-Windows-Python311-v0.1.0.zip.
+- SHA-256 do ZIP de release: aff9f001f9420342c07aa9e9847cfa451c7d73887bde00f6b94404a75c286740.
+- GitHub Actions run #60: 44038026199 — SUCCESS.
+- 39 testes passaram em 0.18s.
+- pip check, compileall, imports, construção Tk, PyInstaller, verificação do EXE, smoke test de arranque, geração do ZIP, verificação SHA-256 e upload: PASS.
+- Artefacto GitHub: ECUProTune-Windows-Python311, ID 14308052177, 53,129,794 bytes.
+- SHA-256 do artefacto GitHub: 71c0d617d14891f2e1a0d209e8a3832e27566e228bf24cea9887c42eef03ee55.
+- Retenção até 2026-12-01T07:22:53Z.
+- PR #5 ainda por abrir para main.
+- Segurança: gestão/visualização/simulação apenas; sem escrita física ECU nem driver de flash.
+
 ## 2026-11-17 — PR #3 integrado / installer Windows endurecido
 - PR #3 — fix: harden scheduler persistence and logging behavior — merged em main.
 - Merge commit: 8409dce3b6f1ddcabaa2191a34deb126908ca228.
@@ -17,7 +39,7 @@
 - Artefacto Windows: ECUProTune-Windows-Python311, ID 14308435021, 53,396,794 bytes.
 - SHA-256: fcf00546f29a068064e3d5a001168a8a4ac21b0eeb83b7c85991aacbb8325be9.
 - Retenção até 2026-12-01T07:15:17Z.
-- PR #4 ainda por abrir para main.
+- PR #4 foi posteriormente integrado em 2026-11-17 (merge commit ee82b350a6b3bb48915f595389366045082c2ab6).
 - Segurança: gestão/visualização/simulação apenas; sem escrita física ECU nem driver de flash.
 
 ## 2026-11-17 — PR #2 integrado / scheduler e logging
@@ -58,10 +80,10 @@
 - Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
 
 ## Próximos passos
-1. Abrir e validar PR #4 com a melhoria do instalador Windows.
-2. Teste visual manual no Windows quando o PC estiver disponível.
+1. Abrir e validar PR #5 com o empacotamento de release versionada.
+2. Teste manual do instalador e ZIP num Windows de utilizador final.
 3. Expandir testes GUI sem hardware e cobertura de recuperação de ficheiros.
-4. Preparar um pacote de distribuição onedir com instruções de instalação e verificação.
+4. Preparar notas de release e processo de publicação, sem publicar automaticamente tags/releases.
 5. Só depois avaliar adapters de hardware isolados, fail-closed e sem escrita física por defeito.
 
 ## 2026-11-15 — Windows CI verde / PR #1 aberto (histórico)
