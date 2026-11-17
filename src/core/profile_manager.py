@@ -23,7 +23,7 @@ class ProfileManager:
             or cleaned in {".", ".."}
             or Path(cleaned).name != cleaned
             or "/" in cleaned
-            or "\\\\" in cleaned
+            or "\\" in cleaned
             or cleaned.endswith(".json")
         ):
             raise ValueError("Nome de perfil inválido.")
@@ -65,7 +65,7 @@ class ProfileManager:
             not isinstance(filename, str)
             or Path(filename).name != filename
             or "/" in filename
-            or "\\\\" in filename
+            or "\\" in filename
             or not filename.endswith(".json")
         ):
             raise ValueError("Nome de configuração inválido.")
