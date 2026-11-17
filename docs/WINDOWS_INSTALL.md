@@ -51,7 +51,7 @@ O resultado é:
 
     dist\ECUProTune\ECUProTune.exe
 
-É um pacote PyInstaller onedir. Mantém a pasta completa, incluindo _internal, junto do executável. Não distribuas apenas o ficheiro EXE.
+É um pacote PyInstaller onedir. O script de release cria um ZIP versionado em release, acompanhado por BUILD-MANIFEST.json e SHA256SUMS.txt. O manifesto regista a versão, plataforma, Python, tamanho e SHA-256. Mantém a pasta completa, incluindo _internal; não distribuas apenas o EXE.
 
 ## Problemas comuns
 

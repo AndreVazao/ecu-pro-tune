@@ -13,19 +13,19 @@ if errorlevel 1 (
     goto :error
 )
 
-echo [1/4] A validar dependencias...
+echo [1/5] A validar dependencias...
 .venv\Scripts\python.exe -m pip check
 if errorlevel 1 goto :error
 
-echo [2/4] A instalar PyInstaller...
+echo [2/5] A instalar PyInstaller...
 .venv\Scripts\python.exe -m pip install --upgrade pyinstaller
 if errorlevel 1 goto :error
 
-echo [3/4] A preparar build...
+echo [3/5] A preparar build...
 if exist "build\ECUProTune" rmdir /s /q "build\ECUProTune"
 if exist "dist\ECUProTune" rmdir /s /q "dist\ECUProTune"
 
-echo [4/4] A construir ECUProTune.exe...
+echo [4/5] A construir ECUProTune.exe...
 .venv\Scripts\python.exe -m PyInstaller --noconfirm --clean --windowed --name ECUProTune --paths . --add-data "configs;configs" --add-data "maps;maps" --collect-all ttkbootstrap --collect-all matplotlib src\app\main.py
 if errorlevel 1 goto :error
 
@@ -35,7 +35,12 @@ if not exist "dist\ECUProTune\ECUProTune.exe" (
 )
 
 echo.
+echo [5/5] A empacotar release e SHA-256...
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\package_release.ps1 -SourceDirectory dist\ECUProTune -OutputDirectory release
+if errorlevel 1 goto :error
+
 echo EXE criado em dist\ECUProTune\ECUProTune.exe
+echo Pacote versionado e manifesto criados em release\
 echo Mantem a pasta ECUProTune completa, incluindo _internal.
 pause
 exit /b 0

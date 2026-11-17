@@ -4,6 +4,8 @@ Aplicação desktop Python para gestão visual de perfis de calibração automó
 
 ## Estado atual
 
+- Versão atual: 0.1.0.
+
 - GUI ttkbootstrap funcional.
 - Modos Performance e Showcase.
 - Dashboard com telemetria simulada.
@@ -42,7 +44,7 @@ Ou diretamente:
 
 Executa build_exe.bat. O build inclui os diretórios configs e maps, além dos recursos de ttkbootstrap e matplotlib.
 
-O resultado é dist\ECUProTune\ECUProTune.exe. Distribui a pasta completa, incluindo _internal; não copies apenas o EXE.
+O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECUProTune-Windows-Python311-v0.1.0.zip, acompanhado por BUILD-MANIFEST.json e SHA256SUMS.txt. O ZIP mantém a pasta completa, incluindo _internal.
 
 ## Arquitetura
 

@@ -119,11 +119,28 @@ jobs:
           }
           Stop-Process -Id $process.Id -Force
 
+      - name: Package Windows release
+        shell: pwsh
+        run: |
+          ./scripts/package_release.ps1 -SourceDirectory "dist/ECUProTune" -OutputDirectory "release"
+          $manifest = Get-Content "release/BUILD-MANIFEST.json" -Raw | ConvertFrom-Json
+          $archive = Join-Path "release" $manifest.archive
+          if (-not (Test-Path $archive)) {
+            Write-Error "Release archive not found: $archive"
+            exit 1
+          }
+          $actualHash = (Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $manifest.sha256) {
+            Write-Error "Release archive SHA-256 does not match the manifest."
+            exit 1
+          }
+          Write-Host "Release package and SHA-256 verified."
+
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
           name: ECUProTune-Windows-Python311
-          path: dist/ECUProTune/
+          path: release/
           if-no-files-found: error
           retention-days: 14
 
@@ -136,4 +153,4 @@ jobs:
           "- Branch/ref: $env:GITHUB_REF" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "- Runner: $env:RUNNER_OS" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "- Python: 3.11" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "- Build artifact: ECUProTune-Windows-Python311 (14 days)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "- Release artifact: versioned ZIP + BUILD-MANIFEST.json + SHA256SUMS.txt (14 days)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
