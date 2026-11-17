@@ -46,7 +46,6 @@ def test_main_window_displays_application_version() -> None:
     assert 'self.root.title(f"ECU Pro Tune v{__version__}")' in main
 
 
-
 def test_local_build_invokes_release_packager_without_broad_cleanup() -> None:
     build_script = (ROOT / "build_exe.bat").read_text(encoding="utf-8")
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
@@ -62,7 +61,6 @@ def test_release_documentation_exists() -> None:
 
     assert guide.is_file()
     assert "SHA256SUMS.txt" in guide.read_text(encoding="utf-8")
-
 
 
 def test_windows_version_generator_writes_valid_pyinstaller_resource(tmp_path: Path) -> None:
@@ -92,13 +90,12 @@ def test_release_manifest_includes_windows_file_version() -> None:
     assert 'windows_file_version = "$version.0"' in script
 
 
-
 def test_windows_ci_verifies_embedded_executable_file_and_product_versions() -> None:
     workflow = (ROOT / ".github" / "workflows" / "windows-ci.yml").read_text(
         encoding="utf-8"
     )
 
     assert "Verify Windows executable version metadata" in workflow
-    assert "$expectedVersion = \\"$version.0\\"" in workflow
+    assert '$expectedVersion = "$version.0"' in workflow
     assert "$versionInfo.FileVersion" in workflow
     assert "$versionInfo.ProductVersion" in workflow
