@@ -1,5 +1,22 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #2 integrado / scheduler e logging
+- PR #2 — test: harden profile, map and rollback integration flows — merged em main.
+- Merge commit: 0980530a17368c919f07867953e51da3dea649da.
+- CI do PR #2: run #20, 44035539787 — SUCCESS.
+- CI pós-merge da main: run #21, 44035795100 — SUCCESS.
+- Nova branch: feature/scheduler-logging-tests-20261117.
+- Scheduler endurecido: validação de perfil/data/estrutura JSON, preservação de ficheiros corrompidos, gravação atómica, execução de callbacks isolada e espera cancelável através de Event.wait.
+- Testes novos: agendamento de itens, rejeição de dados inválidos, preservação de JSON corrompido, execução única de tarefas vencidas, tarefas futuras não executadas, retry após falha de callback e logging UTF-8.
+- GitHub Actions run #25: 44035973794 — SUCCESS.
+- 29 testes passaram em 0.12s.
+- pip check, compileall, imports, construção Tk, PyInstaller, verificação do EXE, smoke test de arranque e upload do artefacto: PASS.
+- Artefacto Windows: ECUProTune-Windows-Python311, ID 14306798921, 53,398,443 bytes.
+- SHA-256: adc45d75bb8930a77fe25fffb083dd999c45b6ae4f1606396807bb46d0b78796.
+- Retenção até 2026-12-01T07:06:49Z.
+- PR #3 ainda por abrir neste checkpoint; abrir para main após sincronizar esta documentação.
+- Segurança: aplicação continua apenas em gestão/visualização/simulação, sem escrita física ECU ou driver de flash.
+
 ## 2026-11-17 — PR #1 integrado / reforço de testes de integração
 - PR #1 — feat: advanced simulation dashboard and Windows CI — merged em `main`.
 - Merge commit: aa388679e1ea0510c66ed588d4d313e2cbe7e1ba.
