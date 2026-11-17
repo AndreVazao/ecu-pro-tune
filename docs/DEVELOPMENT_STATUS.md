@@ -1,5 +1,25 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #3 integrado / installer Windows endurecido
+- PR #3 — fix: harden scheduler persistence and logging behavior — merged em main.
+- Merge commit: 8409dce3b6f1ddcabaa2191a34deb126908ca228.
+- Nova branch: feature/windows-installer-hardening-20261117.
+- Installer agora exige Python 3.11 validado, valida .venv existente, instala dependências, executa pip check e valida imports centrais.
+- FFmpeg passou a ser opcional e só é instalado via winget após confirmação explícita.
+- ecu_test.bat valida Python 3.11, pip check, compileall e pytest.
+- build_exe.bat alinhado com CI, inclui configs/maps e recursos ttkbootstrap/matplotlib.
+- Limpeza do build limitada às pastas build/ECUProTune e dist/ECUProTune; não apaga outros conteúdos de build/dist.
+- README e docs/WINDOWS_INSTALL.md atualizados.
+- Novos testes estáticos para os scripts Windows.
+- GitHub Actions run #39: 44037045786 — SUCCESS.
+- 33 testes passaram em 0.15s.
+- pip check, compileall, imports, construção Tk, PyInstaller, verificação do EXE, smoke test de arranque e upload do artefacto: PASS.
+- Artefacto Windows: ECUProTune-Windows-Python311, ID 14308435021, 53,396,794 bytes.
+- SHA-256: fc f00546f29a068064e3d5a001168a8a4ac21b0eeb83b7c85991aacbb8325be9.
+- Retenção até 2026-12-01T07:15:17Z.
+- PR #4 ainda por abrir para main.
+- Segurança: gestão/visualização/simulação apenas; sem escrita física ECU nem driver de flash.
+
 ## 2026-11-17 — PR #2 integrado / scheduler e logging
 - PR #2 — test: harden profile, map and rollback integration flows — merged em main.
 - Merge commit: 0980530a17368c919f07867953e51da3dea649da.
@@ -14,7 +34,7 @@
 - Artefacto Windows: ECUProTune-Windows-Python311, ID 14306798921, 53,398,443 bytes.
 - SHA-256: adc45d75bb8930a77fe25fffb083dd999c45b6ae4f1606396807bb46d0b78796.
 - Retenção até 2026-12-01T07:06:49Z.
-- PR #3 ainda por abrir neste checkpoint; abrir para main após sincronizar esta documentação.
+- PR #3 foi posteriormente integrado em 2026-11-17 (merge commit 8409dce3b6f1ddcabaa2191a34deb126908ca228).
 - Segurança: aplicação continua apenas em gestão/visualização/simulação, sem escrita física ECU ou driver de flash.
 
 ## 2026-11-17 — PR #1 integrado / reforço de testes de integração
@@ -38,10 +58,10 @@
 - Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
 
 ## Próximos passos
-1. Rever e integrar o PR #2 quando os checks estiverem verdes.
-2. Expandir testes de integração para scheduler, logging, ficheiros corrompidos e fluxos GUI sem hardware.
-3. Melhorar installer Windows e diagnóstico opcional de FFmpeg, sem tornar FFmpeg requisito da GUI.
-4. Teste visual manual em Windows quando o PC estiver disponível.
+1. Abrir e validar PR #4 com a melhoria do instalador Windows.
+2. Teste visual manual no Windows quando o PC estiver disponível.
+3. Expandir testes GUI sem hardware e cobertura de recuperação de ficheiros.
+4. Preparar um pacote de distribuição onedir com instruções de instalação e verificação.
 5. Só depois avaliar adapters de hardware isolados, fail-closed e sem escrita física por defeito.
 
 ## 2026-11-15 — Windows CI verde / PR #1 aberto (histórico)
