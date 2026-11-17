@@ -44,7 +44,7 @@ Ou diretamente:
 
 Executa build_exe.bat. O build inclui os diretórios configs e maps, além dos recursos de ttkbootstrap e matplotlib.
 
-O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECUProTune-Windows-Python311-v0.1.0.zip, acompanhado por BUILD-MANIFEST.json e SHA256SUMS.txt. O ZIP mantém a pasta completa, incluindo _internal.
+O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECUProTune-Windows-Python311-v0.1.0.zip, acompanhado por BUILD-MANIFEST.json e SHA256SUMS.txt. O executável inclui metadados de versão Windows (0.1.0.0). O ZIP mantém a pasta completa, incluindo _internal.
 
 ## Arquitetura
 
