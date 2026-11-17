@@ -7,13 +7,14 @@ from src.app.gui_theme import AppTheme
 from src.app.mode_selector import ModeSelector
 from src.core.logger import setup_logger
 from src.utils.paths import ensure_directories
+from src.version import __version__
 
 class ECUProTuneApp:
     def __init__(self) -> None:
         ensure_directories()
         self.logger = setup_logger()
         self.root = ttk.Window(themename="darkly")
-        self.root.title("ECU Pro Tune")
+        self.root.title(f"ECU Pro Tune v{__version__}")
         self.root.geometry("1400x860")
         self.root.minsize(1100, 700)
         AppTheme(self.root).configure()
