@@ -15,7 +15,7 @@
 - 33 testes passaram em 0.15s.
 - pip check, compileall, imports, construção Tk, PyInstaller, verificação do EXE, smoke test de arranque e upload do artefacto: PASS.
 - Artefacto Windows: ECUProTune-Windows-Python311, ID 14308435021, 53,396,794 bytes.
-- SHA-256: fc f00546f29a068064e3d5a001168a8a4ac21b0eeb83b7c85991aacbb8325be9.
+- SHA-256: fcf00546f29a068064e3d5a001168a8a4ac21b0eeb83b7c85991aacbb8325be9.
 - Retenção até 2026-12-01T07:15:17Z.
 - PR #4 ainda por abrir para main.
 - Segurança: gestão/visualização/simulação apenas; sem escrita física ECU nem driver de flash.
