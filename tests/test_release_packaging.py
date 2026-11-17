@@ -30,6 +30,8 @@ def test_windows_ci_packages_and_uploads_release_directory() -> None:
         encoding="utf-8"
     )
 
+    assert "Generate Windows executable version metadata" in workflow
+    assert "--version-file build/windows_version_info.txt" in workflow
     assert "Package Windows release" in workflow
     assert "package_release.ps1" in workflow
     assert "path: release/" in workflow
