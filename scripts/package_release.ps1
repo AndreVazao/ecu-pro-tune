@@ -17,9 +17,13 @@ if (-not [System.IO.Path]::IsPathRooted($OutputDirectory)) {
 $source = (Resolve-Path -LiteralPath $SourceDirectory).Path
 $executable = Join-Path $source "ECUProTune.exe"
 $versionFile = Join-Path $repositoryRoot "VERSION"
+$internalDirectory = Join-Path $source "_internal"
 
 if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
     throw "Executável não encontrado: $executable"
+}
+if (-not (Test-Path -LiteralPath $internalDirectory -PathType Container)) {
+    throw "Diretório PyInstaller _internal não encontrado: $internalDirectory"
 }
 if (-not (Test-Path -LiteralPath $versionFile -PathType Leaf)) {
     throw "Ficheiro VERSION não encontrado: $versionFile"
