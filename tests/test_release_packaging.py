@@ -17,6 +17,7 @@ def test_release_packager_creates_archive_manifest_and_checksum() -> None:
     script = (ROOT / "scripts" / "package_release.ps1").read_text(encoding="utf-8")
 
     assert "Compress-Archive" in script
+    assert '$internalDirectory = Join-Path $source "_internal"' in script
     assert "Get-FileHash" in script
     assert "BUILD-MANIFEST.json" in script
     assert "SHA256SUMS.txt" in script
