@@ -1,5 +1,18 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #5 integrado / metadados Windows do executável
+- PR #5 — build: add versioned Windows release archives and integrity manifests — merged em main.
+- Merge commit: fc6fd26ade4b5b5c4713c1378d5e0c83d4686a48.
+- CI pós-merge da main: run #63, 44038630985 — SUCCESS.
+- Nova branch: feature/windows-version-metadata-20261117.
+- Novo gerador scripts/generate_windows_version_info.py lê VERSION e produz build/windows_version_info.txt para PyInstaller.
+- build_exe.bat e Windows CI usam --version-file; o EXE recebe FileVersion/ProductVersion 0.1.0.0 nas propriedades Windows.
+- BUILD-MANIFEST.json regista também windows_file_version.
+- Testes cobrem geração/sintaxe do recurso, tuple filevers/prodvers e integração no build local/CI.
+- CI run #75: 44038890038 — status pending/queued no último check; ainda sem resultado confirmado.
+- PR #6 ainda não aberto.
+- Segurança mantida: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-17 — PR #4 integrado / release Windows versionada
 - PR #4 — build: harden Windows installer and packaging workflow — merged em main.
 - Merge commit: ee82b350a6b3bb48915f595389366045082c2ab6.
@@ -19,7 +32,7 @@
 - Artefacto GitHub: ECUProTune-Windows-Python311, ID 14308052177, 53,129,794 bytes.
 - SHA-256 do artefacto GitHub: 71c0d617d14891f2e1a0d209e8a3832e27566e228bf24cea9887c42eef03ee55.
 - Retenção até 2026-12-01T07:22:53Z.
-- PR #5 ainda por abrir para main.
+- PR #5 foi integrado em 2026-11-17 (merge commit fc6fd26ade4b5b5c4713c1378d5e0c83d4686a48).
 - Segurança: gestão/visualização/simulação apenas; sem escrita física ECU nem driver de flash.
 
 ## 2026-11-17 — PR #3 integrado / installer Windows endurecido
@@ -80,7 +93,7 @@
 - Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
 
 ## Próximos passos
-1. Abrir e validar PR #5 com o empacotamento de release versionada.
+1. Abrir e validar PR #6 com metadados de versão do executável Windows.
 2. Teste manual do instalador e ZIP num Windows de utilizador final.
 3. Expandir testes GUI sem hardware e cobertura de recuperação de ficheiros.
 4. Preparar notas de release e processo de publicação, sem publicar automaticamente tags/releases.
