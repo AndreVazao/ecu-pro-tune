@@ -46,6 +46,12 @@ Executa build_exe.bat. O build inclui os diretórios configs e maps, além dos r
 
 O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECUProTune-Windows-Python311-v0.1.0.zip, acompanhado por BUILD-MANIFEST.json e SHA256SUMS.txt. O executável inclui metadados de versão Windows (0.1.0.0). O ZIP mantém a pasta completa, incluindo _internal.
 
+## Documentação de release
+
+- Histórico: CHANGELOG.md.
+- Plano de aceitação manual no Windows: docs/ACCEPTANCE_TEST_WINDOWS.md.
+- Empacotamento e integridade: docs/RELEASE_PACKAGING.md.
+
 ## Arquitetura
 
 - src/app: interface e dashboard

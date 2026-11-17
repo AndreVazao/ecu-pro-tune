@@ -1,5 +1,18 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #7 integrado / preparação de aceitação 0.1.0
+- PR #7 — ci: verify embedded Windows executable version metadata — merged em main.
+- Merge commit: 227f73821e7c2d5f261bd9ec8e613de51cbe5c15.
+- CI do PR #7: run #86, 44040161974 — SUCCESS; 42 testes passaram em 0.18s.
+- CI push da branch: run #85, 44039854917 — SUCCESS.
+- CI verifica FileVersion e ProductVersion do EXE real e confirma 0.1.0.0.
+- Nova branch: feature/release-acceptance-20261117.
+- CHANGELOG.md criado para 0.1.0.
+- docs/ACCEPTANCE_TEST_WINDOWS.md criado com 14 casos manuais: instalação, venv, FFmpeg opcional, dashboard, navegação, mapas, backup/restore, build, version info, ZIP, hash e fronteira de segurança.
+- README liga changelog, plano manual e guia de empacotamento.
+- Não declarar aceitação manual nem publicar release/tag até executar o plano num Windows de utilizador final.
+- Segurança: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-17 — PR #6 integrado / verificação real da versão Windows
 - PR #6 — build: embed Windows file version metadata in executable — merged em main.
 - Merge commit: 872788763e78f3272dd97f7b301d1ba3022408b3.
@@ -105,8 +118,8 @@
 - Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
 
 ## Próximos passos
-1. Abrir e validar PR #7 com verificação real da versão do EXE no Windows.
-2. Teste manual do instalador e ZIP num Windows de utilizador final.
+1. Abrir e validar PR #8 com changelog e plano de aceitação manual.
+2. Executar os 14 casos de aceitação num Windows de utilizador final antes de publicar release.
 3. Expandir testes GUI sem hardware e cobertura de recuperação de ficheiros.
 4. Preparar notas de release e processo de publicação, sem publicar automaticamente tags/releases.
 5. Só depois avaliar adapters de hardware isolados, fail-closed e sem escrita física por defeito.
