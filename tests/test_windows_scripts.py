@@ -29,6 +29,8 @@ def test_windows_build_includes_runtime_data_and_collects_gui_resources() -> Non
     assert "--collect-all ttkbootstrap" in build_script
     assert "--collect-all matplotlib" in build_script
     assert r"dist\ECUProTune\ECUProTune.exe" in build_script
+    assert 'if exist dist rmdir /s /q dist' not in build_script
+    assert 'if exist build rmdir /s /q build' not in build_script
 
 
 def test_windows_test_launcher_checks_environment_and_runs_pip_check() -> None:
