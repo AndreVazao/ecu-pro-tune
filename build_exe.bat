@@ -22,8 +22,8 @@ echo [2/4] A instalar PyInstaller...
 if errorlevel 1 goto :error
 
 echo [3/4] A preparar build...
-if exist build rmdir /s /q build
-if exist dist rmdir /s /q dist
+if exist "build\ECUProTune" rmdir /s /q "build\ECUProTune"
+if exist "dist\ECUProTune" rmdir /s /q "dist\ECUProTune"
 
 echo [4/4] A construir ECUProTune.exe...
 .venv\Scripts\python.exe -m PyInstaller --noconfirm --clean --windowed --name ECUProTune --paths . --add-data "configs;configs" --add-data "maps;maps" --collect-all ttkbootstrap --collect-all matplotlib src\app\main.py
