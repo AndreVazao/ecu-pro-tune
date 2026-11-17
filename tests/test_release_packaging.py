@@ -41,3 +41,21 @@ def test_main_window_displays_application_version() -> None:
 
     assert "from src.version import __version__" in main
     assert 'self.root.title(f"ECU Pro Tune v{__version__}")' in main
+
+
+
+def test_local_build_invokes_release_packager_without_broad_cleanup() -> None:
+    build_script = (ROOT / "build_exe.bat").read_text(encoding="utf-8")
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+
+    assert "scripts\\package_release.ps1" in build_script
+    assert 'if exist "dist\\ECUProTune" rmdir /s /q "dist\\ECUProTune"' in build_script
+    assert 'if exist dist rmdir /s /q dist' not in build_script
+    assert "release/" in gitignore
+
+
+def test_release_documentation_exists() -> None:
+    guide = ROOT / "docs" / "RELEASE_PACKAGING.md"
+
+    assert guide.is_file()
+    assert "SHA256SUMS.txt" in guide.read_text(encoding="utf-8")
