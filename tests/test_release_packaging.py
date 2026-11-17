@@ -90,3 +90,15 @@ def test_release_manifest_includes_windows_file_version() -> None:
     script = (ROOT / "scripts" / "package_release.ps1").read_text(encoding="utf-8")
 
     assert 'windows_file_version = "$version.0"' in script
+
+
+
+def test_windows_ci_verifies_embedded_executable_file_and_product_versions() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "windows-ci.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Verify Windows executable version metadata" in workflow
+    assert "$expectedVersion = \\"$version.0\\"" in workflow
+    assert "$versionInfo.FileVersion" in workflow
+    assert "$versionInfo.ProductVersion" in workflow
