@@ -26,7 +26,7 @@ In PowerShell, from the repository root:
 
 Compare the result with SHA256SUMS.txt and the sha256 field in BUILD-MANIFEST.json.
 
-The Windows CI runs the same packaging script and independently checks the archive hash before uploading the artifact.
+The Windows CI runs the same packaging script, independently checks the archive hash, and reads the executable VersionInfo to assert FileVersion and ProductVersion match VERSION before uploading the artifact.
 
 ## Distribution scope
 

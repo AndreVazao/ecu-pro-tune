@@ -1,5 +1,17 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-17 — PR #6 integrado / verificação real da versão Windows
+- PR #6 — build: embed Windows file version metadata in executable — merged em main.
+- Merge commit: 872788763e78f3272dd97f7b301d1ba3022408b3.
+- CI do PR #6: run #78, 44039120682 — SUCCESS; 41 testes passaram em 0.20s.
+- CI push da branch: run #77, 44039079454 — SUCCESS.
+- Nova branch: feature/exe-version-verification-20261117.
+- Workflow acrescenta validação real de VersionInfo do EXE após o build.
+- FileVersion e ProductVersion têm de corresponder a VERSION + .0; mismatch bloqueia o pipeline antes do pacote.
+- Teste estático garante que o workflow executa as duas verificações.
+- PR #7 ainda por abrir.
+- Segurança mantida: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-17 — PR #5 integrado / metadados Windows do executável
 - PR #5 — build: add versioned Windows release archives and integrity manifests — merged em main.
 - Merge commit: fc6fd26ade4b5b5c4713c1378d5e0c83d4686a48.
@@ -10,7 +22,7 @@
 - BUILD-MANIFEST.json regista também windows_file_version.
 - Testes cobrem geração/sintaxe do recurso, tuple filevers/prodvers e integração no build local/CI.
 - CI run #75: 44038890038 — status pending/queued no último check; ainda sem resultado confirmado.
-- PR #6 ainda não aberto.
+- PR #6 foi integrado em 2026-11-17 (merge commit 872788763e78f3272dd97f7b301d1ba3022408b3).
 - Segurança mantida: sem escrita física ECU, driver flash ou programação hardware.
 
 ## 2026-11-17 — PR #4 integrado / release Windows versionada
@@ -93,7 +105,7 @@
 - Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
 
 ## Próximos passos
-1. Abrir e validar PR #6 com metadados de versão do executável Windows.
+1. Abrir e validar PR #7 com verificação real da versão do EXE no Windows.
 2. Teste manual do instalador e ZIP num Windows de utilizador final.
 3. Expandir testes GUI sem hardware e cobertura de recuperação de ficheiros.
 4. Preparar notas de release e processo de publicação, sem publicar automaticamente tags/releases.

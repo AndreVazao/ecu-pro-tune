@@ -110,6 +110,23 @@ jobs:
           }
           Get-Item $exe | Format-List FullName, Length, LastWriteTime
 
+      - name: Verify Windows executable version metadata
+        shell: pwsh
+        run: |
+          $exe = "dist/ECUProTune/ECUProTune.exe"
+          $version = (Get-Content "VERSION" -Raw).Trim()
+          $expectedVersion = "$version.0"
+          $versionInfo = (Get-Item $exe).VersionInfo
+          if ($versionInfo.FileVersion -ne $expectedVersion) {
+            Write-Error "FileVersion mismatch. Expected $expectedVersion, got $($versionInfo.FileVersion)."
+            exit 1
+          }
+          if ($versionInfo.ProductVersion -ne $expectedVersion) {
+            Write-Error "ProductVersion mismatch. Expected $expectedVersion, got $($versionInfo.ProductVersion)."
+            exit 1
+          }
+          Write-Host "Windows EXE version verified: $expectedVersion"
+
       - name: Smoke test packaged application startup
         shell: pwsh
         run: |
