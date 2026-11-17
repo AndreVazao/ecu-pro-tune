@@ -53,6 +53,7 @@ $sha256 = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowe
 $manifest = [ordered]@{
     product = "ECU Pro Tune"
     version = $version
+    windows_file_version = "$version.0"
     platform = "Windows x64"
     python = "3.11"
     packaging = "PyInstaller onedir"
