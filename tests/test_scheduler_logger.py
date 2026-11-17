@@ -137,6 +137,7 @@ def test_logger_writes_utf8_records_and_can_be_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     log_file = tmp_path / "logs" / "ecu.log"
+    log_file.parent.mkdir(parents=True)
     monkeypatch.setattr(logger_module, "LOG_FILE", log_file)
     logger = setup_logger(f"ecu-pro-tune-test-{tmp_path.name}")
 
