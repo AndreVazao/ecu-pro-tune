@@ -1,21 +1,39 @@
 # ECU Pro Tune — Development Status
 
-## 2026-11-15 — Windows CI verde / PR aberto
-- Branch de trabalho: feature/dashboard-advanced-20261108.
-- Commit validado pelo CI: ff2c609cac0ce0bd1df9b0eab04231ffa8a25671.
+## 2026-11-17 — PR #1 integrado / reforço de testes de integração
+- PR #1 — feat: advanced simulation dashboard and Windows CI — merged em `main`.
+- Merge commit: aa388679e1ea0510c66ed588d4d313e2cbe7e1ba.
+- A branch `main` foi confirmada no merge commit acima.
+- Nova branch de trabalho: `feature/integration-tests-20261117`, criada a partir da main já integrada.
+- Commit de testes: 7f1b53e0743f049d5b3929db84ed265d062f782d.
+- GitHub Actions run #18: 44035159971 — SUCCESS.
+- Run URL: https://github.com/AndreVazao/ecu-pro-tune/actions/runs/44035159971.
+- Testes unitários e de integração: 20 passed in 0.10s.
+- Foram adicionados testes de round-trip e validação de caminhos para ProfileManager, ECUManager e RollbackManager.
+- Validação de mapas numéricos rejeita NaN, infinitos, booleanos e intervalos inválidos.
+- Hardening: nomes de perfil/configuração/backup e referências a mapas são validados para impedir path traversal; perfis são gravados com replace atómico e JSON não finito é rejeitado.
+- pip check, compileall, import smoke test, construção Tk, build PyInstaller, verificação do EXE, smoke test de arranque e upload do artefacto: PASS.
+- Artefacto Windows: ECUProTune-Windows-Python311, ID 14306118545, 53,396,254 bytes.
+- SHA-256 do artefacto: 2787bc15238657ec9446f691521b03d66438178e976812a553a2e321d1cce510.
+- Retenção do artefacto até 2026-12-01T07:00:26Z.
+- Avisos não bloqueantes do build: matplotlib.tests sem baseline image directory, ausência de bindings Qt e aviso de transição Node 20 das actions. Build e smoke test concluíram com sucesso.
+- O CI valida testes/build e arranque breve; não substitui teste visual prolongado, validação em todos os PCs ou teste com ECU física.
+- Segurança: app permanece em gestão/visualização/simulação; sem escrita física ECU, sem driver flash e sem programação de ECU.
+
+## Próximos passos
+1. Rever e integrar o PR #2 quando os checks estiverem verdes.
+2. Expandir testes de integração para scheduler, logging, ficheiros corrompidos e fluxos GUI sem hardware.
+3. Melhorar installer Windows e diagnóstico opcional de FFmpeg, sem tornar FFmpeg requisito da GUI.
+4. Teste visual manual em Windows quando o PC estiver disponível.
+5. Só depois avaliar adapters de hardware isolados, fail-closed e sem escrita física por defeito.
+
+## 2026-11-15 — Windows CI verde / PR #1 aberto (histórico)
+- Branch de implementação: feature/dashboard-advanced-20261108.
+- Commit validado inicialmente: ff2c609cac0ce0bd1df9b0eab04231ffa8a25671.
 - GitHub Actions run #4: SUCCESS — https://github.com/AndreVazao/ecu-pro-tune/actions/runs/43427809165.
-- Runner: windows-latest, Python 3.11.
-- Job Windows / Python 3.11: todos os 16 passos concluídos com sucesso.
-- pip check, compileall, imports, construção Tk dashboard e PyInstaller: PASS.
-- Testes unitários: 4 passed in 0.02s.
-- Smoke test do executável: ECUProTune.exe iniciou e permaneceu ativo durante 8 segundos.
-- Artefacto publicado: ECUProTune-Windows-Python311, 53,394,215 bytes, 2.310 ficheiros.
-- Executável no pacote: ECUProTune.exe (14,852,596 bytes); pacote onedir, manter todos os ficheiros e a pasta _internal.
-- SHA-256 do artefacto ZIP: d535beb11fb51fb0bd59c5210d902a8d6aff84e03501f181a4bd6ba9abcb19dc.
-- Retenção do artefacto até 2026-11-27.
-- PR #1 aberto para main: https://github.com/AndreVazao/ecu-pro-tune/pull/1.
-- PR está aberto e mergeable; não fazer merge sem autorização explícita.
-- O CI valida compilação/testes e arranque breve no runner, não substitui teste visual prolongado nem valida hardware real.
+- Run #6 do commit de documentação também terminou SUCCESS — https://github.com/AndreVazao/ecu-pro-tune/actions/runs/43749616835.
+- PR #1 foi posteriormente integrado em 2026-11-17 (merge commit acima).
+- O CodeRabbit não corre automaticamente neste repo com menos de 10 stars; isso não afeta o CI.
 
 ## 2026-11-13 — Windows CI / Actions
 - Workflow: .github/workflows/windows-ci.yml.
@@ -56,11 +74,3 @@
 
 ## Segurança
 A aplicação atual é gestão, visualização e simulação. Não existe driver de escrita física nem rotina de flash. Qualquer futura integração de hardware deverá ser isolada, explicitamente validada e bloqueada por defeito.
-
-## Próximos gates
-1. Rever PR #1 e obter autorização explícita antes de integrar em main.
-2. Deixar o CI disparado pelo PR/documentação completar e confirmar novamente o estado verde.
-3. Fazer teste visual manual no PC Windows quando estiver disponível.
-4. Endurecer installer/FFmpeg.
-5. Testes de integração adicionais.
-6. Só depois adapters de hardware isolados e sem escrita física por defeito.
