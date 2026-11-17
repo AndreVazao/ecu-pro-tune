@@ -82,6 +82,9 @@ jobs:
       - name: Install PyInstaller
         run: python -m pip install pyinstaller
 
+      - name: Generate Windows executable version metadata
+        run: python scripts/generate_windows_version_info.py
+
       - name: Build Windows executable
         run: >-
           python -m PyInstaller
@@ -89,6 +92,7 @@ jobs:
           --clean
           --windowed
           --name ECUProTune
+          --version-file build/windows_version_info.txt
           --paths .
           --add-data "configs;configs"
           --add-data "maps;maps"

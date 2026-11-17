@@ -30,6 +30,8 @@ def test_windows_ci_packages_and_uploads_release_directory() -> None:
         encoding="utf-8"
     )
 
+    assert "Generate Windows executable version metadata" in workflow
+    assert "--version-file build/windows_version_info.txt" in workflow
     assert "Package Windows release" in workflow
     assert "package_release.ps1" in workflow
     assert "path: release/" in workflow
@@ -60,3 +62,31 @@ def test_release_documentation_exists() -> None:
 
     assert guide.is_file()
     assert "SHA256SUMS.txt" in guide.read_text(encoding="utf-8")
+
+
+
+def test_windows_version_generator_writes_valid_pyinstaller_resource(tmp_path: Path) -> None:
+    import subprocess
+    import sys
+
+    output = tmp_path / "windows_version_info.txt"
+    script = ROOT / "scripts" / "generate_windows_version_info.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--output", str(output)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    generated = output.read_text(encoding="utf-8")
+    assert "filevers=(0, 1, 0, 0)" in generated
+    assert "prodvers=(0, 1, 0, 0)" in generated
+    assert "StringStruct('FileVersion', '0.1.0.0')" in generated
+    compile(generated, str(output), "exec")
+
+
+def test_release_manifest_includes_windows_file_version() -> None:
+    script = (ROOT / "scripts" / "package_release.ps1").read_text(encoding="utf-8")
+
+    assert 'windows_file_version = "$version.0"' in script
