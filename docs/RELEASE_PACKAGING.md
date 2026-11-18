@@ -39,6 +39,6 @@ After generating or extracting the release output directory, run:
 
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify_release.ps1 -ReleaseDirectory release
 
-The verifier checks the product/version/platform metadata, expected ZIP filename, archive size, SHA-256 in both the manifest and checksum file, and the required onedir executable plus _internal contents inside the ZIP. Windows CI runs this independent verifier before uploading the artifact.
+The verifier checks the product/version/platform metadata, expected ZIP filename, archive size, SHA-256 in both the manifest and checksum file, and the required onedir executable plus _internal contents inside the ZIP. It also rejects absolute paths, parent-directory traversal, entries outside ECUProTune/, and duplicate ZIP entries before the archive is trusted. Windows CI runs this independent verifier before uploading the artifact.
 
 The verifier is intended for a release output directory containing the ZIP, BUILD-MANIFEST.json and SHA256SUMS.txt. It does not replace the manual GUI acceptance plan.

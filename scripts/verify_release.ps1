@@ -73,12 +73,37 @@ if ($checksumLine -ne $expectedChecksumLine) {
 Add-Type -AssemblyName System.IO.Compression
 $zip = [System.IO.Compression.ZipFile]::OpenRead($archivePath)
 try {
-    $entryNames = @($zip.Entries | ForEach-Object { $_.FullName.Replace("\", "/") })
-    if ($entryNames -notcontains "ECUProTune/ECUProTune.exe") {
-        throw "O ZIP não contém ECUProTune/ECUProTune.exe."
+    $entryNames = @()
+    $seenEntries = @{}
+    foreach ($entry in $zip.Entries) {
+        $entryName = $entry.FullName.Replace("\", "/")
+        if ([string]::IsNullOrWhiteSpace($entryName) -or $entryName.StartsWith("/")) {
+            throw "O ZIP contém um caminho vazio ou absoluto."
+        }
+        if ($entryName -match '^[A-Za-z]:' -or $entryName -match '(^|/)\.\.(/|$)' -or $entryName -match '(^|/)\.(/|$)') {
+            throw "O ZIP contém um caminho inseguro: $entryName"
+        }
+        if ($entryName -notlike "ECUProTune/*") {
+            throw "O ZIP contém conteúdo fora da pasta ECUProTune: $entryName"
+        }
+        if ($seenEntries.ContainsKey($entryName)) {
+            throw "O ZIP contém entradas duplicadas: $entryName"
+        }
+        $seenEntries[$entryName] = $true
+        $entryNames += $entryName
     }
-    if (-not ($entryNames | Where-Object { $_ -like "ECUProTune/_internal/*" })) {
-        throw "O ZIP não contém os recursos PyInstaller em _internal."
+
+    $executableEntry = $zip.GetEntry("ECUProTune/ECUProTune.exe")
+    if ($null -eq $executableEntry -or $executableEntry.Length -le 0) {
+        throw "O ZIP não contém um ECUProTune.exe válido."
+    }
+
+    $internalFiles = @($zip.Entries | Where-Object {
+        $name = $_.FullName.Replace("\", "/")
+        $name -like "ECUProTune/_internal/*" -and $_.Length -gt 0
+    })
+    if ($internalFiles.Count -eq 0) {
+        throw "O ZIP não contém ficheiros PyInstaller válidos em _internal."
     }
 }
 finally {
