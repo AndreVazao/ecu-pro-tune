@@ -82,3 +82,19 @@ This plan covers the user-machine checks that GitHub Actions cannot fully replac
 ## Result recording
 
 For each case, record PASS/FAIL, Windows edition/build, CPU architecture, Python version, date, and any error output. Do not mark the release as manually accepted until these checks have actually been run on a Windows user machine.
+
+
+## Structured result recording
+
+After executing the cases on the target Windows machine, a structured JSON report can be generated from the repository root:
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\record_windows_acceptance.ps1
+
+For every case, enter PASS, FAIL or SKIP and optionally add notes/evidence. The script records Windows edition/build, architecture, PowerShell version, Python 3.11 availability, UTC timestamp and per-case results under reports\acceptance\.
+
+The overall result is:
+- PASS only when all 14 cases are marked PASS.
+- FAIL when any case is marked FAIL.
+- INCOMPLETE when there are no failures but one or more cases are SKIP.
+
+The recorder does not execute or validate the GUI checks itself. Results must reflect tests actually performed; never mark a case PASS based only on CI.

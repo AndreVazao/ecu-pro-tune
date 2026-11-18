@@ -1,5 +1,23 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-18 — registo estruturado de aceitação manual Windows
+- PR #10 — security: reject unsafe paths in Windows release archives — merged em main.
+- Merge commit: 5b9dce59f2bec0f5c9176fbd9fa9eaf2aa567391.
+- CI do PR #10: run #109, 44397532910 — SUCCESS.
+- CI pós-merge da main: run #110, 44397930870 — SUCCESS.
+- Nova branch: feature/windows-acceptance-recorder-20261118.
+- Criado scripts/record_windows_acceptance.ps1 para registar os 14 casos manuais como PASS/FAIL/SKIP.
+- O relatório JSON inclui versão, timestamp UTC, Windows edition/version/build, arquitetura, PowerShell, disponibilidade Python 3.11 e notas por caso.
+- Resultado global PASS apenas se os 14 casos forem PASS; FAIL se algum falhar; INCOMPLETE se existir SKIP sem FAIL.
+- README e docs/ACCEPTANCE_TEST_WINDOWS.md documentam o processo.
+- CI run #115: 44398214617 — SUCCESS; 46 testes passaram em 0.18s.
+- PyInstaller, EXE version metadata, startup smoke test, ZIP, verificador independente e upload: PASS.
+- Release ZIP SHA-256: 275a871dc5fbc90b1257710236daeb2a8dafe3ddd9c8a950245f0dd83a1e28b4.
+- GitHub artifact ID 14471692980, 53,129,769 bytes; digest 4b2de2a29fb668ee401ef774e3f760dd95440647b3deb06970049a82029c2c3f; expira 2026-12-02T21:09:24Z.
+- PR #11 a abrir após CI da atualização documental.
+- Aceitação manual real continua pendente; o script apenas regista resultados introduzidos pelo utilizador e não simula execução.
+- Segurança: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-18 — segurança de caminhos dentro do ZIP de release
 - PR #9 — build: independently verify Windows release integrity — merged em main.
 - Merge commit: 6baca49faff34b97d88b2b9c783fd987752ba1bf.
