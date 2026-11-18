@@ -126,3 +126,15 @@ def test_windows_ci_runs_independent_release_verification_before_upload() -> Non
 
     assert "verify_release.ps1" in workflow
     assert verify_position < upload_position
+
+
+
+def test_release_verifier_rejects_zip_slip_and_duplicate_entries() -> None:
+    script = (ROOT / "scripts" / "verify_release.ps1").read_text(encoding="utf-8")
+
+    assert 'StartsWith("/")' in script
+    assert "entryName -match '(^|/)\\.\\.(/|$)'" in script
+    assert "seenEntries.ContainsKey($entryName)" in script
+    assert 'entryName -notlike "ECUProTune/*"' in script
+    assert '$executableEntry.Length -le 0' in script
+    assert '$internalFiles.Count -eq 0' in script
