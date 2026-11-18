@@ -1,5 +1,16 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-18 — PR #11 integrado / registo de aceitação Windows
+- PR #11 — test: add structured Windows manual acceptance recorder — merged em main.
+- Merge commit: f72307e2875ac60f4bec84229634a54d7f0af363.
+- CI do PR #11: run #117, 44399033395 — SUCCESS; 46 testes passaram em 0.22s.
+- CI pós-merge da main: run #118, 44399399468 — em execução no checkpoint.
+- scripts/record_windows_acceptance.ps1 regista os 14 casos manuais com PASS/FAIL/SKIP e gera JSON com dados do ambiente.
+- O relatório só resulta em PASS se os 14 casos forem efetivamente marcados PASS.
+- Não executa testes GUI por si; continua a ser necessário testar num Windows real.
+- Aceitação manual permanece pendente; não criar tag/release pública até completar e rever o relatório.
+- Segurança: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-18 — registo estruturado de aceitação manual Windows
 - PR #10 — security: reject unsafe paths in Windows release archives — merged em main.
 - Merge commit: 5b9dce59f2bec0f5c9176fbd9fa9eaf2aa567391.
@@ -14,7 +25,7 @@
 - PyInstaller, EXE version metadata, startup smoke test, ZIP, verificador independente e upload: PASS.
 - Release ZIP SHA-256: 275a871dc5fbc90b1257710236daeb2a8dafe3ddd9c8a950245f0dd83a1e28b4.
 - GitHub artifact ID 14471692980, 53,129,769 bytes; digest 4b2de2a29fb668ee401ef774e3f760dd95440647b3deb06970049a82029c2c3f; expira 2026-12-02T21:09:24Z.
-- PR #11 a abrir após CI da atualização documental.
+- PR #11 integrado em 2026-11-18 (merge commit f72307e2875ac60f4bec84229634a54d7f0af363).
 - Aceitação manual real continua pendente; o script apenas regista resultados introduzidos pelo utilizador e não simula execução.
 - Segurança: sem escrita física ECU, driver flash ou programação hardware.
 
