@@ -138,3 +138,22 @@ def test_release_verifier_rejects_zip_slip_and_duplicate_entries() -> None:
     assert 'entryName -notlike "ECUProTune/*"' in script
     assert '$executableEntry.Length -le 0' in script
     assert '$internalFiles.Count -eq 0' in script
+
+
+
+def test_windows_acceptance_recorder_captures_all_fourteen_cases() -> None:
+    script = (ROOT / "scripts" / "record_windows_acceptance.ps1").read_text(
+        encoding="utf-8"
+    )
+    plan = (ROOT / "docs" / "ACCEPTANCE_TEST_WINDOWS.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert script.count("@{ id = ") == 14
+    assert "PASS" in script and "FAIL" in script and "SKIP" in script
+    assert "overall_result = $overall" in script
+    assert "recorded_at_utc" in script
+    assert "os_build = $os.BuildNumber" in script
+    assert "python_311 = $python311" in script
+    assert "ECUProTune-Acceptance-$timestamp.json" in script
+    assert "14." in plan
