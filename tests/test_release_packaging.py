@@ -99,3 +99,30 @@ def test_windows_ci_verifies_embedded_executable_file_and_product_versions() -> 
     assert '$expectedVersion = "$version.0"' in workflow
     assert "$versionInfo.FileVersion" in workflow
     assert "$versionInfo.ProductVersion" in workflow
+
+
+
+def test_release_verifier_checks_manifest_hash_checksum_and_zip_layout() -> None:
+    script = (ROOT / "scripts" / "verify_release.ps1").read_text(encoding="utf-8")
+
+    assert "BUILD-MANIFEST.json" in script
+    assert "SHA256SUMS.txt" in script
+    assert "Get-FileHash" in script
+    assert "archive_size_bytes" in script
+    assert "windows_file_version" in script
+    assert "ECUProTune/ECUProTune.exe" in script
+    assert "ECUProTune/_internal/*" in script
+    assert "zip.Dispose()" in script
+    assert "actualHash -ne $manifest.sha256" in script
+
+
+def test_windows_ci_runs_independent_release_verification_before_upload() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "windows-ci.yml").read_text(
+        encoding="utf-8"
+    )
+
+    verify_position = workflow.index("Independently verify release archive")
+    upload_position = workflow.index("Upload Windows build")
+
+    assert "verify_release.ps1" in workflow
+    assert verify_position < upload_position
