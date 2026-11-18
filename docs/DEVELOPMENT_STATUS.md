@@ -1,5 +1,22 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-18 — Verificador independente de integridade da release
+- Main CI run #94, 44040965817 — SUCCESS após merge do PR #8.
+- Nova branch: feature/release-integrity-verifier-20261118.
+- Adicionado scripts/verify_release.ps1 para verificar produto, versão, plataforma, versão Windows, nome do ZIP, tamanho, SHA-256 no manifesto e SHA256SUMS.txt.
+- O verificador também abre o ZIP e confirma ECUProTune/ECUProTune.exe e conteúdo PyInstaller em ECUProTune/_internal/.
+- Windows CI executa a verificação independente após empacotar e antes de carregar o artefacto.
+- README e docs/RELEASE_PACKAGING.md documentam o comando de verificação.
+- Novos testes estáticos cobrem a verificação e a ordem do workflow.
+- GitHub Actions run #100: 44395319597 — SUCCESS.
+- 44 testes passaram em 0.21s.
+- Build PyInstaller, metadados EXE, smoke test de arranque, ZIP, verificação independente, SHA-256 e upload: PASS.
+- SHA-256 do ZIP de release: 9b7156513b9d2526820c65a81d72dbd05dc5c970057941418ecbe110de17bbd2.
+- Artefacto GitHub ID 14471145182, 53,130,269 bytes; digest do artefacto: f60e833192b762d7eba9842508ea6b188f94a31aa37b112fffe5f8da737ba2bf; expira 2026-12-02T20:52:59Z.
+- PR #9 a abrir após validar a atualização documental.
+- Aceitação manual num Windows de utilizador final continua pendente; não publicar tag/release nem declarar v0.1.0 manualmente aceite.
+- Segurança: sem escrita física ECU, driver de flash ou programação hardware.
+
 ## 2026-11-17 — PR #7 integrado / preparação de aceitação 0.1.0
 - PR #7 — ci: verify embedded Windows executable version metadata — merged em main.
 - Merge commit: 227f73821e7c2d5f261bd9ec8e613de51cbe5c15.

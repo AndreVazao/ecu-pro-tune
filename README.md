@@ -51,6 +51,7 @@ O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECU
 - Histórico: CHANGELOG.md.
 - Plano de aceitação manual no Windows: docs/ACCEPTANCE_TEST_WINDOWS.md.
 - Empacotamento e integridade: docs/RELEASE_PACKAGING.md.
+- Verificador independente do pacote: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\verify_release.ps1 -ReleaseDirectory release`.
 
 ## Arquitetura
 

@@ -31,3 +31,14 @@ The Windows CI runs the same packaging script, independently checks the archive 
 ## Distribution scope
 
 This is a portable onedir package, not an MSI installer. It requires no FFmpeg for the GUI or WAV fallback sounds. Do not describe it as an ECU flashing tool: the application remains in simulation/visualization mode and has no physical ECU write path.
+
+
+## Independent package verification
+
+After generating or extracting the release output directory, run:
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify_release.ps1 -ReleaseDirectory release
+
+The verifier checks the product/version/platform metadata, expected ZIP filename, archive size, SHA-256 in both the manifest and checksum file, and the required onedir executable plus _internal contents inside the ZIP. Windows CI runs this independent verifier before uploading the artifact.
+
+The verifier is intended for a release output directory containing the ZIP, BUILD-MANIFEST.json and SHA256SUMS.txt. It does not replace the manual GUI acceptance plan.
