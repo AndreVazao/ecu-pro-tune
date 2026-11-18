@@ -157,6 +157,11 @@ jobs:
           }
           Write-Host "Release package and SHA-256 verified."
 
+      - name: Independently verify release archive
+        shell: pwsh
+        run: |
+          ./scripts/verify_release.ps1 -ReleaseDirectory "release"
+
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
