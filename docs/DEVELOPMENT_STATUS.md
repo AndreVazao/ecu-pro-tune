@@ -1,5 +1,23 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-18 — segurança de caminhos dentro do ZIP de release
+- PR #9 — build: independently verify Windows release integrity — merged em main.
+- Merge commit: 6baca49faff34b97d88b2b9c783fd987752ba1bf.
+- CI do PR #9: run #102, 44396154831 — SUCCESS.
+- CI pós-merge da main: run #103, 44396501334 — SUCCESS; 45 testes passaram em 0.21s.
+- Nova branch: feature/release-archive-path-safety-20261118.
+- Verificador agora rejeita caminhos absolutos, segmentos . e .., caminhos fora de ECUProTune/ e entradas ZIP duplicadas.
+- Confirma ainda que ECUProTune.exe existe e não está vazio, e que _internal contém ficheiros.
+- Teste regressivo cobre traversal, duplicados e layout do ZIP.
+- GitHub Actions run #107: 44396707008 — SUCCESS.
+- 45 testes passaram em 0.21s.
+- Build PyInstaller, versão EXE, smoke test, empacotamento, verificação independente e upload: PASS.
+- SHA-256 do ZIP: 92ca165e0f8dfb554228a5fd68e365fb306297fde9cf5a53404fbfa57d741a1c.
+- Artefacto GitHub ID 14471276293, 53,128,733 bytes; digest sha256:91f6304821a9f39febebaf90287193b18db2f671b99235efb66b269e8f071e5e; expira 2026-12-02T21:00:51Z.
+- PR #10 a abrir após CI da atualização documental.
+- Aceitação manual em Windows real continua pendente; não criar tag/release pública ainda.
+- Segurança funcional ECU mantida: sem escrita física, flash driver ou programação hardware.
+
 ## 2026-11-18 — Verificador independente de integridade da release
 - Main CI run #94, 44040965817 — SUCCESS após merge do PR #8.
 - Nova branch: feature/release-integrity-verifier-20261118.
