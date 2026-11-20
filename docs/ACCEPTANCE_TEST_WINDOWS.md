@@ -129,3 +129,19 @@ Este teste:
 - confirma que IDs duplicados e totais inconsistentes são rejeitados.
 
 Os relatórios sintéticos existem apenas no diretório temporário do runner e são apagados no fim. Nunca são usados como evidência de aceitação manual real.
+
+
+## Gate final de prontidão para release
+
+Depois de executar os 14 casos no Windows real e validar o relatório, o gate combinado verifica:
+- integridade do ZIP, manifesto, tamanho e SHA-256;
+- correspondência da versão da aplicação entre o manifesto e o relatório;
+- estrutura e consistência dos 14 casos;
+- resultado global 14/14 PASS.
+
+Comando, a partir da raiz do repositório:
+
+    $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\check_release_readiness.ps1 -ReleaseDirectory release -AcceptanceReport $report
+
+O comando termina com sucesso apenas quando o pacote está íntegro e o relatório da mesma versão tem todos os 14 casos em PASS. Isto é um gate local de prontidão; não publica automaticamente uma GitHub Release nem substitui a revisão humana das evidências.
