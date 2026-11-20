@@ -1,5 +1,25 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-20 — PR #13 integrado / testes reais do validador PowerShell
+- PR #12 — test: validate structured Windows acceptance reports — merged em main.
+- Merge commit PR #12: 1afd679306602c29a617a0f111e911ca34cd3047.
+- CI PR #12 run #127: 44825379046 — SUCCESS; 49 testes passaram em 0.18s.
+- Nova branch: feature/windows-acceptance-validator-ci-20261120.
+- Adicionado tests/test_windows_acceptance_validator.ps1: análise sintática de quatro scripts PowerShell e execução real do validador contra relatórios sintéticos temporários.
+- O teste confirma 14/14 PASS com -RequirePass, bloqueia INCOMPLETE com -RequirePass, rejeita IDs duplicados e totais inconsistentes.
+- O Windows CI executa este harness antes dos smoke tests da aplicação.
+- A primeira execução detetou erro de interpolação PowerShell ($caseId:); corrigido para ${caseId} e validado novamente.
+- CI push run #135: 44826111889 — SUCCESS; 50 testes Python passaram em 0.21s.
+- CI PR run #136: 44826505018 — SUCCESS.
+- PowerShell parser e integração do validador: PASS.
+- PyInstaller, EXE version metadata, startup smoke, ZIP, verificação independente e upload: PASS.
+- SHA-256 ZIP: aef62d63f889c34358e1e62fc42c45395e2636b49ae872925564710f46a33c58.
+- Artefacto ID 14674850402, 53,130,873 bytes; digest sha256:337d4662d6e0a1227bb57b20d3662507a03fc48c3b1f9aaddcee578815dcbae1; expira 2026-12-04T22:08:40Z.
+- PR #13 — ci: execute Windows acceptance validator integration tests — merged em main; merge commit e9835b7b4b4cafc7ddcb4d60e1bce7bf98d742a1.
+- Main CI run #137: 44826843675 — em execução no checkpoint.
+- Aceitação manual em Windows real continua pendente; relatórios sintéticos do CI não contam como aceitação real.
+- Segurança funcional: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-18 — PR #11 integrado / registo de aceitação Windows
 - PR #11 — test: add structured Windows manual acceptance recorder — merged em main.
 - Merge commit: f72307e2875ac60f4bec84229634a54d7f0af363.
