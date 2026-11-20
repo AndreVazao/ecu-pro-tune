@@ -7,6 +7,7 @@ $pwshPath = Join-Path $PSHOME "pwsh.exe"
 $scriptPaths = @(
     (Join-Path $repositoryRoot "scripts\record_windows_acceptance.ps1"),
     $validatorPath,
+    (Join-Path $repositoryRoot "scripts\check_release_readiness.ps1"),
     (Join-Path $repositoryRoot "scripts\verify_release.ps1"),
     (Join-Path $repositoryRoot "scripts\package_release.ps1")
 )

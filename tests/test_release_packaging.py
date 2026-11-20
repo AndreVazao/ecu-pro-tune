@@ -235,3 +235,22 @@ def test_windows_ci_executes_clean_installer_and_checks_venv_imports() -> None:
     assert r".\.venv\Scripts\python.exe" in workflow
     assert "sys.version_info[:2] == (3, 11)" in workflow
     assert "Installed virtual environment smoke test: OK" in workflow
+
+
+
+def test_release_readiness_gate_matches_report_version_and_runs_both_validators() -> None:
+    script = (ROOT / "scripts" / "check_release_readiness.ps1").read_text(
+        encoding="utf-8"
+    )
+    parser_harness = (ROOT / "tests" / "test_windows_acceptance_validator.ps1").read_text(
+        encoding="utf-8"
+    )
+
+    assert "BUILD-MANIFEST.json" in script
+    assert "application_version" in script
+    assert "manifest.version" in script
+    assert "verify_release.ps1" in script
+    assert "validate_windows_acceptance.ps1" in script
+    assert "-RequirePass" in script
+    assert "RELEASE READY" in script
+    assert "check_release_readiness.ps1" in parser_harness
