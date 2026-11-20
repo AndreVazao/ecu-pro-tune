@@ -157,3 +157,40 @@ def test_windows_acceptance_recorder_captures_all_fourteen_cases() -> None:
     assert "python_311 = $python311" in script
     assert "ECUProTune-Acceptance-$timestamp.json" in script
     assert "14." in plan
+
+
+
+def test_windows_acceptance_recorder_uses_collision_resistant_report_names() -> None:
+    script = (ROOT / "scripts" / "record_windows_acceptance.ps1").read_text(
+        encoding="utf-8"
+    )
+
+    assert 'ToString("yyyyMMdd-HHmmss-fff")' in script
+    assert "while (Test-Path -LiteralPath $reportPath)" in script
+    assert "Set-Content -LiteralPath $reportPath" in script
+
+
+def test_windows_acceptance_validator_checks_all_cases_and_recomputed_totals() -> None:
+    script = (ROOT / "scripts" / "validate_windows_acceptance.ps1").read_text(
+        encoding="utf-8"
+    )
+
+    assert "schema_version" in script
+    assert "recorded_at_utc" in script
+    assert "expectedCases.Count" in script
+    assert "seenIds.ContainsKey($caseId)" in script
+    assert "totals do relatório" in script
+    assert "expectedOverall" in script
+    assert "RequirePass" in script
+    assert 'exit 2' in script
+
+
+def test_acceptance_documentation_explains_report_validation_gate() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    plan = (ROOT / "docs" / "ACCEPTANCE_TEST_WINDOWS.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "validate_windows_acceptance.ps1" in readme
+    assert "validate_windows_acceptance.ps1" in plan
+    assert "-RequirePass" in plan
