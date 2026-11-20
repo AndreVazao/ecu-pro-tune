@@ -51,6 +51,10 @@ jobs:
           MPLBACKEND: Agg
         run: python -m pytest -q
 
+      - name: Validate PowerShell scripts and acceptance report gate
+        shell: pwsh
+        run: ./tests/test_windows_acceptance_validator.ps1
+
       - name: Smoke test application and dashboard imports
         env:
           MPLBACKEND: Agg
