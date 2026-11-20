@@ -1,5 +1,25 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-20 — PR #15 integrado / gate combinado de prontidão
+- PR #14 — ci: smoke test the Windows installer end to end — merged em main.
+- Merge commit PR #14: 74903c0a6e1f6a64542a977e79b1127ca9690ef2.
+- CI push run #144: 44827167408 — SUCCESS; 52 testes Python passaram em 0.39s.
+- O Windows CI executa install_ecu_pro_tune.bat num runner limpo com ECU_PRO_TUNE_CI=1, cria .venv, executa pip check e valida imports Python 3.11.
+- PR #14 CI run #145: 44827608921 — SUCCESS.
+- Nova branch: feature/release-readiness-gate-20261120.
+- Adicionado scripts/check_release_readiness.ps1: verifica integridade do ZIP, manifesto e SHA-256, compara a versão do manifesto com a versão do relatório manual e exige 14/14 PASS.
+- O gate chama verify_release.ps1 e validate_windows_acceptance.ps1 -RequirePass; não publica automaticamente uma GitHub Release.
+- CI push run #152: 44828225084 — SUCCESS; 53 testes Python passaram em 0.27s.
+- CI PR run #153: 44828615406 — SUCCESS.
+- PowerShell parser, validador de aceitação, instalador Windows, .venv, Tk, PyInstaller, EXE metadata, startup smoke, ZIP, verificação independente e upload: PASS.
+- SHA-256 ZIP: f66f2e5331733d9c3448159338d4edb940c3bff6ac8ab55125737df1bd7f2cac.
+- Artefacto ID 14675371712, 53,129,222 bytes; digest sha256:63f9ef2d76608aaf70ea4d1834aa4b59bff4068ce45bc5ea69baa4b67715a7aa; expira 2026-12-04T22:23:26Z.
+- PR #15 — build: add a combined release readiness gate — merged em main; merge commit 68aa28ddd5e518325c06b401f613124212beebcc.
+- Main CI run #154: 44828982065 — em execução no checkpoint.
+- PC-Vazao-Anjos permanece OFFLINE (última consulta 96 horas atrás); não foi possível executar aceitação manual real.
+- Os relatórios sintéticos do CI não contam como aceitação. Todos os 14 casos continuam pendentes até execução no Windows de utilizador final.
+- Segurança funcional mantida: sem escrita física ECU, driver flash ou programação hardware.
+
 ## 2026-11-20 — PR #13 integrado / testes reais do validador PowerShell
 - PR #12 — test: validate structured Windows acceptance reports — merged em main.
 - Merge commit PR #12: 1afd679306602c29a617a0f111e911ca34cd3047.
