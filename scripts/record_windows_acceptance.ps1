@@ -102,8 +102,13 @@ $report = [ordered]@{
 }
 
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-$timestamp = (Get-Date).ToUniversalTime().ToString("yyyyMMdd-HHmmss")
+$timestamp = (Get-Date).ToUniversalTime().ToString("yyyyMMdd-HHmmss-fff")
 $reportPath = Join-Path $OutputDirectory "ECUProTune-Acceptance-$timestamp.json"
+$suffix = 1
+while (Test-Path -LiteralPath $reportPath) {
+    $reportPath = Join-Path $OutputDirectory "ECUProTune-Acceptance-$timestamp-$('{0:D3}' -f $suffix).json"
+    $suffix++
+}
 $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reportPath -Encoding UTF8
 
 Write-Host ""
