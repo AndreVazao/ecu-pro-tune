@@ -65,7 +65,7 @@ jobs:
             Write-Error "Windows installer failed with exit code $LASTEXITCODE."
             exit $LASTEXITCODE
           }
-          .venv\Scripts\python.exe -c "import sys; assert sys.version_info[:2] == (3, 11); import numpy, matplotlib, ttkbootstrap, pydub, PIL, playsound; from src.core.sound_manager import SoundManager; from src.app.dashboard import Dashboard; print('Installed virtual environment smoke test: OK')"
+          .\.venv\Scripts\python.exe -c "import sys; assert sys.version_info[:2] == (3, 11); import numpy, matplotlib, ttkbootstrap, pydub, PIL, playsound; from src.core.sound_manager import SoundManager; from src.app.dashboard import Dashboard; print('Installed virtual environment smoke test: OK')"
           if ($LASTEXITCODE -ne 0) {
             Write-Error "Installed virtual environment smoke test failed."
             exit $LASTEXITCODE
