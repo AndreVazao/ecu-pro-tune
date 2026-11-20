@@ -194,3 +194,21 @@ def test_acceptance_documentation_explains_report_validation_gate() -> None:
     assert "validate_windows_acceptance.ps1" in readme
     assert "validate_windows_acceptance.ps1" in plan
     assert "-RequirePass" in plan
+
+
+
+def test_windows_ci_executes_powerShell_acceptance_validator_integration_suite() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "windows-ci.yml").read_text(
+        encoding="utf-8"
+    )
+    harness = ROOT / "tests" / "test_windows_acceptance_validator.ps1"
+    harness_text = harness.read_text(encoding="utf-8")
+
+    assert "Validate PowerShell scripts and acceptance report gate" in workflow
+    assert "test_windows_acceptance_validator.ps1" in workflow
+    assert harness.is_file()
+    assert "Parser]::ParseFile" in harness_text
+    assert "valid 14/14 report accepted" in harness_text
+    assert "RequirePass" in harness_text
+    assert "duplicate case IDs are rejected" in harness_text
+    assert "inconsistent totals are rejected" in harness_text

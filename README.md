@@ -52,6 +52,7 @@ O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECU
 - Plano de aceitação manual no Windows: docs/ACCEPTANCE_TEST_WINDOWS.md.
 - Registo estruturado dos 14 testes manuais: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\record_windows_acceptance.ps1`.
 - Validação do relatório e gate de aceitação: `scripts\\validate_windows_acceptance.ps1`.
+- Teste de integração PowerShell no Windows CI: `tests\\test_windows_acceptance_validator.ps1`.
 - Empacotamento e integridade: docs/RELEASE_PACKAGING.md.
 - Verificador independente do pacote: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\verify_release.ps1 -ReleaseDirectory release`.
 

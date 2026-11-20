@@ -114,3 +114,18 @@ Para transformar a aceitação completa num gate com código de saída diferente
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_windows_acceptance.ps1 -ReportPath $report -RequirePass
 
 O validador confirma a consistência estrutural do relatório; não executa a GUI, não verifica por si só a veracidade das notas e não substitui a revisão das evidências recolhidas durante os testes.
+
+
+## Testes automáticos do validador
+
+O Windows CI executa também:
+
+    pwsh -NoProfile -File tests\test_windows_acceptance_validator.ps1
+
+Este teste:
+- analisa a sintaxe dos scripts PowerShell de instalação de aceitação e release;
+- cria um relatório sintético 14/14 PASS e confirma que o validador o aceita com -RequirePass;
+- confirma que um relatório INCOMPLETE é estruturalmente válido, mas bloqueado por -RequirePass;
+- confirma que IDs duplicados e totais inconsistentes são rejeitados.
+
+Os relatórios sintéticos existem apenas no diretório temporário do runner e são apagados no fim. Nunca são usados como evidência de aceitação manual real.

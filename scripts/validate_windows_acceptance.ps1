@@ -110,7 +110,7 @@ foreach ($case in $report.cases) {
 
     $result = [string]$case.result
     if ($result -cnotin $allowedResults) {
-        throw "Resultado inválido no caso $caseId: $result"
+        throw "Resultado inválido no caso ${caseId}: $result"
     }
     if ($null -eq $case.notes) {
         throw "O campo notes tem de existir no caso $caseId."
