@@ -179,7 +179,7 @@ def test_windows_acceptance_validator_checks_all_cases_and_recomputed_totals() -
     assert "recorded_at_utc" in script
     assert "expectedCases.Count" in script
     assert "seenIds.ContainsKey($caseId)" in script
-    assert "totals do relatório" in script
+    assert "Os totais do" in script
     assert "expectedOverall" in script
     assert "RequirePass" in script
     assert 'exit 2' in script
