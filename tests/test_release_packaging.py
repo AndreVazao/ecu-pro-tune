@@ -212,3 +212,26 @@ def test_windows_ci_executes_powerShell_acceptance_validator_integration_suite()
     assert "RequirePass" in harness_text
     assert "duplicate case IDs are rejected" in harness_text
     assert "inconsistent totals are rejected" in harness_text
+
+
+
+def test_windows_installer_supports_noninteractive_ci_mode() -> None:
+    installer = (ROOT / "install_ecu_pro_tune.bat").read_text(encoding="utf-8")
+
+    assert 'if /I "%ECU_PRO_TUNE_CI%"=="1" goto :ffmpeg_skipped' in installer
+    assert 'if /I "%ECU_PRO_TUNE_CI%"=="1" exit /b 0' in installer
+    assert 'if /I "%ECU_PRO_TUNE_CI%"=="1" exit /b 1' in installer
+    assert "winget install" in installer
+
+
+def test_windows_ci_executes_clean_installer_and_checks_venv_imports() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "windows-ci.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Smoke test Windows installer" in workflow
+    assert "ECU_PRO_TUNE_CI: " in workflow
+    assert "cmd /c install_ecu_pro_tune.bat" in workflow
+    assert r".\.venv\Scripts\python.exe" in workflow
+    assert "sys.version_info[:2] == (3, 11)" in workflow
+    assert "Installed virtual environment smoke test: OK" in workflow

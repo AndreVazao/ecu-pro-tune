@@ -55,6 +55,22 @@ jobs:
         shell: pwsh
         run: ./tests/test_windows_acceptance_validator.ps1
 
+      - name: Smoke test Windows installer
+        shell: pwsh
+        env:
+          ECU_PRO_TUNE_CI: "1"
+        run: |
+          cmd /c install_ecu_pro_tune.bat
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Windows installer failed with exit code $LASTEXITCODE."
+            exit $LASTEXITCODE
+          }
+          .\.venv\Scripts\python.exe -c "import sys; assert sys.version_info[:2] == (3, 11); import numpy, matplotlib, ttkbootstrap, pydub, PIL, playsound; from src.core.sound_manager import SoundManager; from src.app.dashboard import Dashboard; print('Installed virtual environment smoke test: OK')"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Installed virtual environment smoke test failed."
+            exit $LASTEXITCODE
+          }
+
       - name: Smoke test application and dashboard imports
         env:
           MPLBACKEND: Agg

@@ -46,6 +46,8 @@ if not errorlevel 1 goto :ffmpeg_found
 echo [AVISO] FFmpeg nao encontrado.
 echo A aplicacao GUI e os sons WAV de fallback continuam funcionais.
 echo FFmpeg so e necessario para fluxos opcionais de conversao/geracao MP3.
+if /I "%ECU_PRO_TUNE_CI%"=="1" goto :ffmpeg_skipped
+
 where winget >nul 2>&1
 if errorlevel 1 goto :ffmpeg_manual
 
@@ -94,11 +96,13 @@ echo.
 echo Instalacao concluida.
 echo Arranque: .venv\Scripts\python.exe -m src.app.main
 echo Testes:   ecu_test.bat
+if /I "%ECU_PRO_TUNE_CI%"=="1" exit /b 0
 pause
 exit /b 0
 
 :error
 echo.
 echo [ERRO] A instalacao nao foi concluida.
+if /I "%ECU_PRO_TUNE_CI%"=="1" exit /b 1
 pause
 exit /b 1
