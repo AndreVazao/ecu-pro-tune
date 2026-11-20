@@ -98,3 +98,19 @@ The overall result is:
 - INCOMPLETE when there are no failures but one or more cases are SKIP.
 
 The recorder does not execute or validate the GUI checks itself. Results must reflect tests actually performed; never mark a case PASS based only on CI.
+
+
+## Validar o relatório gerado
+
+O nome do relatório inclui data, hora e milissegundos; se já existir um ficheiro com o mesmo nome, o gravador acrescenta um sufixo para nunca substituir evidência anterior.
+
+Depois de registar os resultados, valida a estrutura, os 14 IDs/títulos, os estados permitidos, os totais recalculados, a data UTC e os metadados do ambiente:
+
+    $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_windows_acceptance.ps1 -ReportPath $report
+
+Para transformar a aceitação completa num gate com código de saída diferente de zero quando o resultado não for PASS:
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_windows_acceptance.ps1 -ReportPath $report -RequirePass
+
+O validador confirma a consistência estrutural do relatório; não executa a GUI, não verifica por si só a veracidade das notas e não substitui a revisão das evidências recolhidas durante os testes.
