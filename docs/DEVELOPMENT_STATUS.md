@@ -15,7 +15,9 @@
 - SHA-256 ZIP: f66f2e5331733d9c3448159338d4edb940c3bff6ac8ab55125737df1bd7f2cac.
 - Artefacto ID 14675371712, 53,129,222 bytes; digest sha256:63f9ef2d76608aaf70ea4d1834aa4b59bff4068ce45bc5ea69baa4b67715a7aa; expira 2026-12-04T22:23:26Z.
 - PR #15 — build: add a combined release readiness gate — merged em main; merge commit 68aa28ddd5e518325c06b401f613124212beebcc.
-- Main CI run #154: 44828982065 — em execução no checkpoint.
+- Main CI run #155: 44829024190 — SUCCESS; 53 testes Python passaram em 0.27s; PowerShell parser/integration, instalador, .venv, Tk, PyInstaller, EXE metadata, startup smoke, ZIP, verificação independente e upload: PASS.
+- Artefacto main ID 14674238646, 53,130,071 bytes; digest sha256:bbfae10fb0b41cf3018129469066f2c4f21eaf1d41501516369559edf90fcf8c; expira 2026-12-04T22:29:26Z.
+- SHA-256 ZIP main: 6f8b7b0920bf00a91e263dd54714347f07309fdfb196bc600abacd5de8800e3c.
 - PC-Vazao-Anjos permanece OFFLINE (última consulta 96 horas atrás); não foi possível executar aceitação manual real.
 - Os relatórios sintéticos do CI não contam como aceitação. Todos os 14 casos continuam pendentes até execução no Windows de utilizador final.
 - Segurança funcional mantida: sem escrita física ECU, driver flash ou programação hardware.
