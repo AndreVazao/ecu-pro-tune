@@ -23,7 +23,7 @@ class RollbackManager:
             isinstance(filename, str)
             and Path(filename).name == filename
             and "/" not in filename
-            and "\" not in filename
+            and "\\" not in filename
             and filename.endswith(".json")
         )
 
