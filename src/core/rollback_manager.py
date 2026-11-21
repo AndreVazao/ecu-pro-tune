@@ -13,6 +13,10 @@ _BACKUP_PATTERN = re.compile(
 )
 
 
+def _reject_nonstandard_json_constant(value: str) -> None:
+    raise ValueError(f"Valor JSON não permitido: {value}")
+
+
 class RollbackManager:
     def __init__(self) -> None:
         ensure_directories()
@@ -86,8 +90,12 @@ class RollbackManager:
             return None
 
         try:
-            restored_data = json.loads(src.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
+            backup_text = src.read_text(encoding="utf-8")
+            restored_data = json.loads(
+                backup_text,
+                parse_constant=_reject_nonstandard_json_constant,
+            )
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             raise ValueError("O backup não contém JSON válido.") from exc
         if not isinstance(restored_data, dict):
             raise ValueError("O backup não contém um objeto JSON.")
@@ -96,7 +104,7 @@ class RollbackManager:
         temporary = dst.with_suffix(dst.suffix + ".restore.tmp")
         try:
             temporary.write_text(
-                json.dumps(restored_data, indent=2, ensure_ascii=False, allow_nan=False),
+                backup_text,
                 encoding="utf-8",
             )
             temporary.replace(dst)
