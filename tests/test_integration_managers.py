@@ -170,7 +170,7 @@ def test_rollback_backup_same_second_does_not_overwrite(
 
 @pytest.mark.parametrize(
     "corrupt_content",
-    ["{broken json", "[]", '"scalar"', "null"],
+    ["{broken json", "[]", '"scalar"', "null", '{"boost":NaN}'],
 )
 def test_rollback_restore_rejects_corrupt_or_non_object_backup_without_overwrite(
     tmp_path: Path,
