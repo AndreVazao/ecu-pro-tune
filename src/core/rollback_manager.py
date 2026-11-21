@@ -73,7 +73,7 @@ class RollbackManager:
             not isinstance(backup_filename, str)
             or Path(backup_filename).name != backup_filename
             or "/" in backup_filename
-            or "\" in backup_filename
+            or "\\" in backup_filename
         ):
             raise ValueError("Nome de backup inválido.")
 
