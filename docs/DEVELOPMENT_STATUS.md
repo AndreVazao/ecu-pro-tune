@@ -13,7 +13,6 @@
 - Próxima direção: expandir testes GUI e recuperação de ficheiros sem hardware, e preparar a aceitação real quando o Windows de utilizador final estiver disponível.
 
 ## 2026-11-20 — PR #15 integrado / gate combinado de prontidão
-## 2026-11-20 — PR #15 integrado / gate combinado de prontidão
 - PR #14 — ci: smoke test the Windows installer end to end — merged em main.
 - Merge commit PR #14: 74903c0a6e1f6a64542a977e79b1127ca9690ef2.
 - CI push run #144: 44827167408 — SUCCESS; 52 testes Python passaram em 0.39s.
