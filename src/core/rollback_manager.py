@@ -9,7 +9,7 @@ from src.utils.paths import BACKUPS_DIR, CONFIGS_DIR, ensure_directories
 
 
 _BACKUP_PATTERN = re.compile(
-    r"^(?P<profile>.+\\.json)_(?P<date>\\d{8})_(?P<time>\\d{6})(?:_(?P<sequence>\\d{3}))?\\.bak\\.json$"
+    r"^(?P<profile>.+\.json)_(?P<date>\d{8})_(?P<time>\d{6})(?:_(?P<sequence>\d{3}))?\.bak\.json$"
 )
 
 
@@ -23,7 +23,7 @@ class RollbackManager:
             isinstance(filename, str)
             and Path(filename).name == filename
             and "/" not in filename
-            and "\\" not in filename
+            and "\" not in filename
             and filename.endswith(".json")
         )
 
@@ -73,7 +73,7 @@ class RollbackManager:
             not isinstance(backup_filename, str)
             or Path(backup_filename).name != backup_filename
             or "/" in backup_filename
-            or "\\" in backup_filename
+            or "\" in backup_filename
         ):
             raise ValueError("Nome de backup inválido.")
 
