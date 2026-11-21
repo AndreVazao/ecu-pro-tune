@@ -1,5 +1,18 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-21 — Persistent checkpoint / estado consolidado
+- Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
+- PR #13 executa testes reais PowerShell para o validador de relatórios sintéticos; cobre 14/14 PASS, INCOMPLETE bloqueado por -RequirePass, IDs duplicados e totais inconsistentes.
+- PR #14 smoke test do instalador em runner Windows limpo: ECU_PRO_TUNE_CI=1, cria/valida .venv, pip check e imports Python 3.11.
+- PR #15 adiciona gate combinado de prontidão: integridade ZIP/manifest/hash, versão e relatório manual 14/14 PASS; chama verify_release e validate_windows_acceptance -RequirePass, sem publicar tag/release automaticamente.
+- CI main run #155: SUCCESS; 53 testes Python em 0.27s; PowerShell parser/integration, instalador, .venv, Tk, PyInstaller, EXE metadata, startup smoke, ZIP, verificação independente e upload: PASS.
+- SHA-256 ZIP da main: 6f8b7b0920bf00a91e263dd54714347f07309fdfb196bc600abacd5de8800e3c.
+- Artefacto main ID 14674238646 (temporário, retenção até 2026-12-04); o artefacto não é release permanente.
+- PC-Vazao-Anjos permanece offline na última verificação; aceitação manual real dos 14 casos continua pendente. Synthetic CI reports não são aceitação.
+- Segurança: aplicação mantém gestão/visualização/simulação; sem ECU write, flash driver ou programação hardware.
+- Próxima direção: expandir testes GUI e recuperação de ficheiros sem hardware, e preparar a aceitação real quando o Windows de utilizador final estiver disponível.
+
+## 2026-11-20 — PR #15 integrado / gate combinado de prontidão
 ## 2026-11-20 — PR #15 integrado / gate combinado de prontidão
 - PR #14 — ci: smoke test the Windows installer end to end — merged em main.
 - Merge commit PR #14: 74903c0a6e1f6a64542a977e79b1127ca9690ef2.
