@@ -153,3 +153,16 @@ def test_logger_writes_utf8_records_and_can_be_closed(
         for handler in list(logger.handlers):
             logger.removeHandler(handler)
             handler.close()
+
+@pytest.mark.parametrize("bad_json", ['[{"profile":"x","run_at":"2026-01-01","executed":false,"bad":NaN}]', 'NaN', '[Infinity]'])
+def test_scheduler_rejects_nonstandard_json_constants_and_preserves_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_json: str
+) -> None:
+    schedule_file = tmp_path / "schedules.json"
+    schedule_file.write_text(bad_json, encoding="utf-8")
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+
+    with pytest.raises(ValueError, match="ilegível"):
+        Scheduler.add_schedule("stage1.json", datetime.now().isoformat())
+
+    assert schedule_file.read_text(encoding="utf-8") == bad_json
