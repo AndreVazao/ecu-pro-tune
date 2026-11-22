@@ -73,7 +73,7 @@ class ProfileManager:
         target = CONFIGS_DIR / filename
         if not target.exists():
             return None
-        data = json.loads(target.read_text(encoding="utf-8"))
+        data = strict_json_loads(target.read_text(encoding="utf-8"))
         if not isinstance(data, dict):
             raise ValueError("A configuração não contém um objeto JSON.")
         return data
