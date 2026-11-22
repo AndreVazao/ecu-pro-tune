@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable, Any
 
+from src.utils.json_utils import strict_json_loads
 from src.utils.paths import SCHEDULE_FILE
 
 
@@ -35,8 +36,8 @@ class Scheduler(threading.Thread):
             return []
 
         try:
-            data = json.loads(SCHEDULE_FILE.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
+            data = strict_json_loads(SCHEDULE_FILE.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
             raise ValueError("O ficheiro de agendamentos está ilegível.") from exc
 
         if not isinstance(data, list):
