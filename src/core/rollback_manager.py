@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from datetime import datetime
 from pathlib import Path
@@ -8,8 +9,12 @@ from src.utils.paths import BACKUPS_DIR, CONFIGS_DIR, ensure_directories
 
 
 _BACKUP_PATTERN = re.compile(
-    r"^(?P<profile>.+\.json)_(?P<date>\d{8})_(?P<time>\d{6})\.bak\.json$"
+    r"^(?P<profile>.+\.json)_(?P<date>\d{8})_(?P<time>\d{6})(?:_(?P<sequence>\d{3}))?\.bak\.json$"
 )
+
+
+def _reject_nonstandard_json_constant(value: str) -> None:
+    raise ValueError(f"Valor JSON não permitido: {value}")
 
 
 class RollbackManager:
@@ -26,6 +31,19 @@ class RollbackManager:
             and filename.endswith(".json")
         )
 
+    @staticmethod
+    def _next_backup_path(profile_filename: str, timestamp: str) -> Path:
+        first = BACKUPS_DIR / f"{profile_filename}_{timestamp}.bak.json"
+        if not first.exists():
+            return first
+
+        for sequence in range(1, 1000):
+            candidate = BACKUPS_DIR / f"{profile_filename}_{timestamp}_{sequence:03d}.bak.json"
+            if not candidate.exists():
+                return candidate
+
+        raise RuntimeError("Limite de backups no mesmo segundo excedido.")
+
     def backup_profile(self, profile_filename: str) -> Path | None:
         if not self._safe_config_filename(profile_filename):
             raise ValueError("Nome de perfil inválido.")
@@ -34,8 +52,14 @@ class RollbackManager:
             return None
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        dst = BACKUPS_DIR / f"{profile_filename}_{timestamp}.bak.json"
-        dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        dst = self._next_backup_path(profile_filename, timestamp)
+        temporary = dst.with_suffix(dst.suffix + ".tmp")
+        try:
+            temporary.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+            temporary.replace(dst)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
         return dst
 
     def list_backups(self) -> list[str]:
@@ -65,6 +89,26 @@ class RollbackManager:
         if not src.is_file():
             return None
 
+        try:
+            backup_text = src.read_text(encoding="utf-8")
+            restored_data = json.loads(
+                backup_text,
+                parse_constant=_reject_nonstandard_json_constant,
+            )
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+            raise ValueError("O backup não contém JSON válido.") from exc
+        if not isinstance(restored_data, dict):
+            raise ValueError("O backup não contém um objeto JSON.")
+
         dst = CONFIGS_DIR / match.group("profile")
-        dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        temporary = dst.with_suffix(dst.suffix + ".restore.tmp")
+        try:
+            temporary.write_text(
+                backup_text,
+                encoding="utf-8",
+            )
+            temporary.replace(dst)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
         return dst

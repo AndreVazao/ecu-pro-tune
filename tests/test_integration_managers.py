@@ -129,3 +129,69 @@ def test_map_name_rejects_unsafe_names(name: str) -> None:
 
 def test_map_name_accepts_normal_names() -> None:
     assert validate_map_name("Stage 1 - Daily_2026")[0] is True
+
+
+
+def test_rollback_backup_same_second_does_not_overwrite(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configs = tmp_path / "configs"
+    backups = tmp_path / "backups"
+    configs.mkdir()
+    backups.mkdir()
+    profile = configs / "daily_profile.json"
+    monkeypatch.setattr(rollback_module, "CONFIGS_DIR", configs)
+    monkeypatch.setattr(rollback_module, "BACKUPS_DIR", backups)
+    profile.write_text('{"rpm_limit": 6200}', encoding="utf-8")
+
+    class FixedDateTime:
+        @staticmethod
+        def now() -> object:
+            from datetime import datetime
+
+            return datetime(2026, 11, 21, 12, 30, 45)
+
+    monkeypatch.setattr(rollback_module, "datetime", FixedDateTime)
+    manager = RollbackManager()
+
+    first = manager.backup_profile(profile.name)
+    assert first is not None
+    profile.write_text('{"rpm_limit": 6800}', encoding="utf-8")
+    second = manager.backup_profile(profile.name)
+
+    assert second is not None
+    assert first != second
+    assert first.read_text(encoding="utf-8") == '{"rpm_limit": 6200}'
+    assert second.read_text(encoding="utf-8") == '{"rpm_limit": 6800}'
+    assert set(manager.list_backups()) == {first.name, second.name}
+    assert manager.restore_backup(second.name) == profile
+    assert json.loads(profile.read_text(encoding="utf-8")) == {"rpm_limit": 6800}
+
+
+@pytest.mark.parametrize(
+    "corrupt_content",
+    ["{broken json", "[]", '"scalar"', "null", '{"boost":NaN}'],
+)
+def test_rollback_restore_rejects_corrupt_or_non_object_backup_without_overwrite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    corrupt_content: str,
+) -> None:
+    configs = tmp_path / "configs"
+    backups = tmp_path / "backups"
+    configs.mkdir()
+    backups.mkdir()
+    profile = configs / "daily_profile.json"
+    profile.write_text('{"rpm_limit": 7100}', encoding="utf-8")
+    backup = backups / "daily_profile.json_20261121_123000.bak.json"
+    backup.write_text(corrupt_content, encoding="utf-8")
+    monkeypatch.setattr(rollback_module, "CONFIGS_DIR", configs)
+    monkeypatch.setattr(rollback_module, "BACKUPS_DIR", backups)
+
+    manager = RollbackManager()
+
+    with pytest.raises(ValueError):
+        manager.restore_backup(backup.name)
+
+    assert profile.read_text(encoding="utf-8") == '{"rpm_limit": 7100}'
+    assert not (configs / "daily_profile.json.restore.tmp").exists()
