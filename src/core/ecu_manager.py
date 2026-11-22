@@ -43,7 +43,7 @@ class ECUManager:
             not isinstance(filename, str)
             or Path(filename).name != filename
             or "/" in filename
-            or "\\\\" in filename
+            or "\\" in filename
             or not filename.endswith(".json")
         ):
             return None
