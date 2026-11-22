@@ -2,6 +2,14 @@
 
 All notable changes to ECU Pro Tune are recorded here.
 
+## Unreleased
+
+### Security and reliability
+- Reject non-standard JSON constants (`NaN`, `Infinity`, `-Infinity`) in saved profiles, ECU profiles, maps and scheduler storage.
+- Filter non-finite numeric arrays from map visualization extraction.
+- Preserve malformed scheduler data rather than overwriting it when adding new tasks.
+
+
 ## 0.1.0 — 2026-11-17
 
 ### Added
