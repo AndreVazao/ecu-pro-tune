@@ -15,6 +15,7 @@ Aplicação desktop Python para gestão visual de perfis de calibração automó
 - Backup de perfis e rollback.
 - Scheduler com persistência validada.
 - Testes automatizados e Windows CI.
+- Leitura JSON estrita: rejeita NaN/Infinity em perfis, mapas e agendamentos.
 - Ambiente virtual isolado.
 - Nenhuma escrita física de ECU nesta fase.
 
