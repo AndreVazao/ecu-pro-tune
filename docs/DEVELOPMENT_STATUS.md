@@ -1,5 +1,14 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-22 — PR #17 merged / strict JSON hardening in progress
+- PR #17 — `fix: protect rollback snapshots and restore integrity` merged after Windows CI run #162 completed SUCCESS.
+- Run #162 verified: Python tests, PowerShell acceptance-validator integration, clean installer smoke, imports, Tk construction, PyInstaller, EXE metadata, packaged startup, release ZIP verification and artifact upload all passed.
+- Merge commit: `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`.
+- New branch: `fix/strict-json-data-loading-20261122`.
+- Current work hardens JSON loading to reject NaN/Infinity in saved/config profiles, ECU profiles, maps and scheduler files, and filters non-finite map arrays.
+- CI validation is pending for the strict-JSON changes. No hardware ECU write, flash or programming path has been introduced.
+
+
 ## 2026-11-21 — Persistent checkpoint / estado consolidado
 - Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
 - PR #13 executa testes reais PowerShell para o validador de relatórios sintéticos; cobre 14/14 PASS, INCOMPLETE bloqueado por -RequirePass, IDs duplicados e totais inconsistentes.
