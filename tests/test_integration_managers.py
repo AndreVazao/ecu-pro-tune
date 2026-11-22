@@ -284,3 +284,13 @@ def test_profile_manager_config_load_rejects_nonfinite_json_values(
 
     with pytest.raises(ValueError):
         ProfileManager(base_dir=tmp_path / "profiles").load_config_profile("invalid.json")
+
+@pytest.mark.parametrize("bad_json", ['{"value":1e999}', '{"value":999999999999999999999999999999999999999999999999999999999999999999999999}'])
+def test_profile_manager_rejects_numeric_overflow_json(
+    tmp_path: Path, bad_json: str
+) -> None:
+    manager = ProfileManager(base_dir=tmp_path / "profiles")
+    (tmp_path / "profiles" / "invalid.json").write_text(bad_json, encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        manager.load_saved_profile("invalid")
