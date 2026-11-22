@@ -259,3 +259,28 @@ def test_ecu_manager_direct_numeric_arrays_filter_nonfinite_values(
 
     with pytest.raises(ValueError):
         ECUManager().load_profile("direct.json")
+
+@pytest.mark.parametrize("bad_json", ['{"value":1e999}', '{"value":NaN}'])
+def test_profile_manager_rejects_overflow_and_nonfinite_json_values(
+    tmp_path: Path, bad_json: str
+) -> None:
+    manager = ProfileManager(base_dir=tmp_path / "profiles")
+    (tmp_path / "profiles" / "invalid.json").write_text(bad_json, encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        manager.load_saved_profile("invalid")
+
+
+@pytest.mark.parametrize("bad_json", ['{"config":NaN}', '{"config":1e999}'])
+def test_profile_manager_config_load_rejects_nonfinite_json_values(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_json: str
+) -> None:
+    import src.core.profile_manager as profile_module
+
+    configs = tmp_path / "configs"
+    configs.mkdir()
+    (configs / "invalid.json").write_text(bad_json, encoding="utf-8")
+    monkeypatch.setattr(profile_module, "CONFIGS_DIR", configs)
+
+    with pytest.raises(ValueError):
+        ProfileManager(base_dir=tmp_path / "profiles").load_config_profile("invalid.json")
