@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
 from src.core.logger import setup_logger
+from src.utils.json_utils import strict_json_loads
 from src.utils.paths import CONFIGS_DIR, MAPS_DIR
 
 
@@ -20,7 +22,7 @@ class ECUManager:
             not isinstance(profile_filename, str)
             or Path(profile_filename).name != profile_filename
             or "/" in profile_filename
-            or "\\" in profile_filename
+            or "\\\\" in profile_filename
             or not profile_filename.endswith(".json")
         ):
             raise ValueError("Nome de perfil inválido.")
@@ -30,7 +32,7 @@ class ECUManager:
             raise FileNotFoundError(f"Perfil não encontrado: {profile_path}")
 
         self.logger.info("Loading profile: %s", profile_path)
-        data = json.loads(profile_path.read_text(encoding="utf-8"))
+        data = strict_json_loads(profile_path.read_text(encoding="utf-8"))
         if not isinstance(data, dict):
             raise ValueError("O perfil não contém um objeto JSON.")
         return data
@@ -41,7 +43,7 @@ class ECUManager:
             not isinstance(filename, str)
             or Path(filename).name != filename
             or "/" in filename
-            or "\\" in filename
+            or "\\\\" in filename
             or not filename.endswith(".json")
         ):
             return None
@@ -52,6 +54,19 @@ class ECUManager:
         except ValueError:
             return None
         return candidate
+
+    @staticmethod
+    def _finite_numeric_array(value: Any) -> bool:
+        return (
+            isinstance(value, list)
+            and bool(value)
+            and all(
+                isinstance(item, (int, float))
+                and not isinstance(item, bool)
+                and math.isfinite(item)
+                for item in value
+            )
+        )
 
     def validate_profile_maps(self, profile_data: dict[str, Any]) -> list[str]:
         missing: list[str] = []
@@ -84,15 +99,7 @@ class ECUManager:
         arrays: dict[str, list[float]] = {}
 
         for key, value in profile.items():
-            if (
-                isinstance(value, list)
-                and value
-                and all(
-                    isinstance(item, (int, float))
-                    and not isinstance(item, bool)
-                    for item in value
-                )
-            ):
+            if self._finite_numeric_array(value):
                 arrays[key] = value
 
         if arrays:
@@ -107,22 +114,14 @@ class ECUManager:
             if map_path is None or not map_path.is_file():
                 continue
             try:
-                map_data = json.loads(map_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
+                map_data = strict_json_loads(map_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError, ValueError):
                 self.logger.exception("Could not read map: %s", map_path)
                 continue
             if not isinstance(map_data, dict):
                 continue
             for map_key, map_values in map_data.items():
-                if (
-                    isinstance(map_values, list)
-                    and map_values
-                    and all(
-                        isinstance(item, (int, float))
-                        and not isinstance(item, bool)
-                        for item in map_values
-                    )
-                ):
+                if self._finite_numeric_array(map_values):
                     arrays[f"{value}:{map_key}"] = map_values
 
         return arrays
