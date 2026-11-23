@@ -1,5 +1,14 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-23 — PR #18 validation checkpoint
+- PR #17 remains merged; Windows CI #162 completed successfully.
+- PR #18 adds strict JSON decoding across saved/config profiles, ECU profiles, maps and scheduler persistence, with regression coverage.
+- Windows CI #167 exposed one overly strict test assumption: large JSON integers are valid; the test and decoder were corrected to preserve standards-compliant arbitrary-precision integers while rejecting `NaN`, infinities and float overflow.
+- Current validation: Windows CI #171 is running against the latest PR #18 head `fae181165bb0f7fcc140fe224160a1ab08a7c925`.
+- PR #18 is not merged; merge remains gated on full Windows CI success.
+- No ECU hardware write, flash or programming path is enabled.
+
+
 ## 2026-11-22 — PR #17 merged / strict JSON hardening in progress
 - PR #17 — `fix: protect rollback snapshots and restore integrity` merged after Windows CI run #162 completed SUCCESS.
 - Run #162 verified: Python tests, PowerShell acceptance-validator integration, clean installer smoke, imports, Tk construction, PyInstaller, EXE metadata, packaged startup, release ZIP verification and artifact upload all passed.
