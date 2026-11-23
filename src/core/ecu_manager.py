@@ -22,7 +22,7 @@ class ECUManager:
             not isinstance(profile_filename, str)
             or Path(profile_filename).name != profile_filename
             or "/" in profile_filename
-            or "\\\\" in profile_filename
+            or "\\" in profile_filename
             or not profile_filename.endswith(".json")
         ):
             raise ValueError("Nome de perfil inválido.")
