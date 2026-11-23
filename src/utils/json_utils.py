@@ -33,5 +33,4 @@ def strict_json_loads(content: str) -> Any:
         content,
         parse_constant=_reject_nonstandard_constant,
         parse_float=_parse_finite_float,
-        parse_int=_parse_finite_int,
     )
