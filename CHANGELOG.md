@@ -4,6 +4,13 @@ All notable changes to ECU Pro Tune are recorded here.
 
 ## Unreleased
 
+### Security and data integrity
+- Reject non-standard JSON constants (`NaN`, `Infinity`, `-Infinity`) and floating-point overflow in profile, map and scheduler data.
+- Preserve valid arbitrary-precision JSON integers while rejecting non-finite floating-point values.
+- Reject malformed or non-object data before profile/map consumers can use it.
+
+## Unreleased
+
 ### Security and reliability
 - Reject non-standard JSON constants (`NaN`, `Infinity`, `-Infinity`) in saved profiles, ECU profiles, maps and scheduler storage.
 - Filter non-finite numeric arrays from map visualization extraction.
