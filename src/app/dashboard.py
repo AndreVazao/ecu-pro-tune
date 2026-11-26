@@ -28,6 +28,11 @@ class Dashboard(ttk.Frame):
     AMBER = "#f4b942"
     RED = "#f06b75"
 
+    SAMPLE_INTERVAL_MS = 400
+    HISTORY_SAMPLES = 90
+    HISTORY_WINDOW_SECONDS = HISTORY_SAMPLES * SAMPLE_INTERVAL_MS / 1000
+    RPM_CHART_MAX = 8000
+
     def __init__(self, parent, mode: str, logger) -> None:
         super().__init__(parent)
         self.mode = mode
@@ -45,7 +50,8 @@ class Dashboard(ttk.Frame):
             "lambda": 1.00,
             "speed": 0.0,
         }
-        self._history = deque([0.0] * 90, maxlen=90)
+        self._rpm_history = deque([850.0] * self.HISTORY_SAMPLES, maxlen=self.HISTORY_SAMPLES)
+        self._load_history = deque([12.0] * self.HISTORY_SAMPLES, maxlen=self.HISTORY_SAMPLES)
         self.configure(style="TFrame")
         self.build()
         self.bind("<Destroy>", self._on_destroy, add="+")
@@ -127,7 +133,7 @@ class Dashboard(ttk.Frame):
             font=("Segoe UI", 10, "bold"), anchor="w",
         ).pack(fill=X, padx=14, pady=(12, 0))
         tk.Label(
-            chart_panel, text="RPM LOAD PROFILE  •  rolling 45 seconds",
+            chart_panel, text=f"RPM + LOAD  •  {self.HISTORY_WINDOW_SECONDS:.0f} s window  •  {self.HISTORY_SAMPLES} samples @ {self.SAMPLE_INTERVAL_MS} ms",
             bg=self.PANEL, fg=self.MUTED, font=("Segoe UI", 8), anchor="w",
         ).pack(fill=X, padx=14, pady=(2, 8))
         self.chart = tk.Canvas(
@@ -218,7 +224,8 @@ class Dashboard(ttk.Frame):
         self.metric_vars["temp"].set(f"{self._values['temp']:.0f}")
         self.metric_vars["lambda"].set(f"{self._values['lambda']:.2f}")
         self.metric_vars["power"].set(f"{power:.0f}")
-        self._history.append(self._values["rpm"])
+        self._rpm_history.append(self._values["rpm"])
+        self._load_history.append(self._values["load"])
         self._draw_chart()
         self._draw_gauges()
         self._after_id = self.after(400, self.tick)
@@ -230,26 +237,46 @@ class Dashboard(ttk.Frame):
         canvas.delete("all")
         width = max(canvas.winfo_width(), 240)
         height = max(canvas.winfo_height(), 150)
-        left, right, top, bottom = 42, width - 14, 14, height - 28
+        left, right, top, bottom = 42, width - 42, 14, height - 28
         plot_h = bottom - top
-        for value in (0, 2000, 4000, 6000, 8000):
-            y = bottom - value / 8000 * plot_h
+        for percent in (0, 25, 50, 75, 100):
+            y = bottom - percent / 100 * plot_h
+            rpm_label = int(self.RPM_CHART_MAX * percent / 100)
             canvas.create_line(left, y, right, y, fill=self.GRID, dash=(2, 4))
             canvas.create_text(
-                left - 8, y, text=str(value), fill=self.MUTED,
+                left - 8, y, text=str(rpm_label), fill=self.MUTED,
                 anchor="e", font=("Segoe UI", 7),
             )
-        points = list(self._history)
-        if len(points) > 1:
-            coords = []
-            for index, value in enumerate(points):
-                x = left + index / (len(points) - 1) * (right - left)
-                y = bottom - min(value, 8000) / 8000 * plot_h
-                coords.extend((x, y))
-            canvas.create_line(*coords, fill=self.BLUE, width=2, smooth=True)
+            canvas.create_text(
+                right + 8, y, text=str(percent), fill=self.MUTED,
+                anchor="w", font=("Segoe UI", 7),
+            )
+
+        rpm_points = list(self._rpm_history)
+        load_points = list(self._load_history)
+        if len(rpm_points) > 1 and len(load_points) == len(rpm_points):
+            rpm_coords = []
+            load_coords = []
+            for index, (rpm, load) in enumerate(zip(rpm_points, load_points)):
+                x = left + index / (len(rpm_points) - 1) * (right - left)
+                rpm_y = bottom - min(max(rpm / self.RPM_CHART_MAX, 0), 1) * plot_h
+                load_y = bottom - min(max(load / 100, 0), 1) * plot_h
+                rpm_coords.extend((x, rpm_y))
+                load_coords.extend((x, load_y))
+            canvas.create_line(*rpm_coords, fill=self.BLUE, width=2, smooth=True)
+            canvas.create_line(*load_coords, fill=self.CYAN, width=2, smooth=True)
+
         canvas.create_text(
-            right, height - 8, text="TIME →", fill=self.MUTED,
-            anchor="e", font=("Segoe UI", 7),
+            left, 5, text="RPM", fill=self.BLUE, anchor="nw",
+            font=("Segoe UI", 7, "bold"),
+        )
+        canvas.create_text(
+            right, 5, text="LOAD %", fill=self.CYAN, anchor="ne",
+            font=("Segoe UI", 7, "bold"),
+        )
+        canvas.create_text(
+            right, height - 8, text=f"0–{self.HISTORY_WINDOW_SECONDS:.0f} s",
+            fill=self.MUTED, anchor="e", font=("Segoe UI", 7),
         )
 
     def _draw_gauges(self) -> None:
