@@ -1,33 +1,16 @@
 # ECU Pro Tune — Development Status
 
-## 2026-11-24 — PR #18 Windows validation complete
-- PR #18 (`fix: reject nonstandard JSON values across profile loading`) remains open pending documentation refresh and final post-update CI.
-- Validated head before documentation refresh: `549766669579074d303f74ca45fe0865f7f59300`.
-- Windows CI run #172 (`45130034241`) completed SUCCESS: compileall, Python unit tests, PowerShell acceptance-validator integration, installer smoke, application/dashboard imports, Tk construction, PyInstaller build, EXE existence and version metadata, packaged startup, ZIP packaging, independent archive verification and artifact upload.
-- Release ZIP: `ECUProTune-Windows-Python311-v0.1.0.zip`; SHA-256: `ea1671f30045c9943f2894d600ca5de7632fc956d6a5df4970199c240ca3fdc6`.
-- GitHub Actions artifact ID: `14798080172`; temporary CI artifact, 14-day retention (not a permanent GitHub Release).
-- PR #18 changes strict JSON parsing across saved/config profiles, ECU profiles, maps and scheduler persistence; valid arbitrary-precision integers remain accepted, while non-standard constants and floating-point overflow are rejected.
-- Manual Windows acceptance remains outstanding: all 14 real user-machine cases must be executed; synthetic CI reports do not count.
-- No ECU hardware write, flash driver or programming path is enabled.
+## 2026-11-26 — Auditoria global e avanço independente do Scheduler
 
-
-## 2026-11-23 — PR #18 validation checkpoint
-- PR #17 remains merged; Windows CI #162 completed successfully.
-- PR #18 adds strict JSON decoding across saved/config profiles, ECU profiles, maps and scheduler persistence, with regression coverage.
-- Windows CI #167 exposed one overly strict test assumption: large JSON integers are valid; the test and decoder were corrected to preserve standards-compliant arbitrary-precision integers while rejecting `NaN`, infinities and float overflow.
-- Current validation: Windows CI #171 is running against the latest PR #18 head `fae181165bb0f7fcc140fe224160a1ab08a7c925`.
-- PR #18 is not merged; merge remains gated on full Windows CI success.
-- No ECU hardware write, flash or programming path is enabled.
-
-
-## 2026-11-22 — PR #17 merged / strict JSON hardening in progress
-- PR #17 — `fix: protect rollback snapshots and restore integrity` merged after Windows CI run #162 completed SUCCESS.
-- Run #162 verified: Python tests, PowerShell acceptance-validator integration, clean installer smoke, imports, Tk construction, PyInstaller, EXE metadata, packaged startup, release ZIP verification and artifact upload all passed.
-- Merge commit: `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`.
-- New branch: `fix/strict-json-data-loading-20261122`.
-- Current work hardens JSON loading to reject NaN/Infinity in saved/config profiles, ECU profiles, maps and scheduler files, and filters non-finite map arrays.
-- CI validation is pending for the strict-JSON changes. No hardware ECU write, flash or programming path has been introduced.
-
+- Revalidação feita dinamicamente: default branch `main`; início da auditoria: `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2` (22-11-2026). PR #18 foi integrada em 26-11-2026 no commit `1fae378641740ab9ca61900dc3f24df5c514d885`.
+- Branches: 19 no total (18 além de main); a API reportou `protected=false` para as branches listadas, pelo que a proteção da main não está confirmada.
+- PR #18 [strict JSON loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18) integrada (squash merge `1fae378641740ab9ca61900dc3f24df5c514d885`); CI #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes PASS. Windows CI run #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram em 0.36s. Installer, imports, construção Tk, PyInstaller, metadados EXE, startup smoke, ZIP e verificação independente: PASS. Artefacto temporário ID 14969454012, retenção 14 dias. ZIP SHA-256 `e244aa88af842dd434f0de043ab8e2e7e9dcb2e97499447c256a905a7b6ae19f`.
+- Main CI run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS: 59 testes passaram em 0.23s; installer, PowerShell validator, imports, Tk, EXE, versão, startup, ZIP, hash, verificação independente e upload: PASS. Artefacto temporário ID 14764488716. SHA-256 ZIP `622fac715dba1797d3c20f329138cb43ed520ed78ad99dd70af962eb17d28b4e`.
+- Releases: API devolveu lista vazia. Tags não confirmadas porque endpoint não foi suportado pela ferramenta de leitura usada nesta auditoria. Não há issue aberta independente identificada.
+- Lacuna de produto confirmada no código: Scheduler core não está exposto na GUI; dashboard gráfico mostra apenas RPM, apesar de legenda RPM + load e duração nominal incorreta. Próximas frentes UX documentadas no roadmap.
+- Avanço: branch `fix/scheduler-failure-logging-20261126`, PR #19 [scheduler diagnostics](https://github.com/AndreVazao/ecu-pro-tune/pull/19), branch reconciliada com a main pós-PR #18; strict JSON e diagnóstico de callback/storage combinados. Callback e falhas de armazenamento agora são registadas com traceback; tarefa falhada continua pendente/retry e ficheiro inválido não é reescrito. Foram acrescentados testes de regressão e roadmap global `docs/PRODUCT_READINESS_ROADMAP.md`, ligado no README.
+- PR #19 CI #177 [45745910572](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45745910572) SUCCESS no head anterior: 60 testes passaram em 0.29s e todo o build/package gate passou. Após a integração da PR #18, o Scheduler foi reconciliado para preservar simultaneamente strict JSON e logging; é obrigatória nova CI sobre o head combinado antes do merge.
+- Aceitação manual real: 14 casos continuam pendentes; não existe relatório 14/14 PASS. Hardware real não testado nem ligado. Release não publicada.
 
 ## 2026-11-21 — Persistent checkpoint / estado consolidado
 - Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
