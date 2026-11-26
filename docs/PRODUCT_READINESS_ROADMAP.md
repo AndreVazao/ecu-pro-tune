@@ -40,10 +40,10 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 ## Evidência GitHub desta auditoria
 
 - Main: `d0eb6b2a`, commit de 22-11-2026; último commit observado nessa branch.
-- PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): aberta, sem reviews registadas; head `4ce93986`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS observado.
+- PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): aberta, sem reviews registadas; head `4ce93986`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS observado; 75 testes passaram em 0.36s, incluindo build e pacote.
 - Branches: 19 no total, incluindo `main`; a API reportou `protected=false` nas branches listadas, pelo que a proteção de `main` não está confirmada.
 - Issues: a listagem aberta observada contém a PR #18; não foi identificada issue aberta independente.
-- CI main: run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS; checkpoint documental anterior reporta 53 testes e build/package gates.
+- CI main: run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS; run #155 [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) foi revalidado: 59 testes passaram em 0.23s; build/package gates também SUCCESS.
 - Releases: lista vazia. A listagem de tags não foi suportada pelo endpoint/fetch utilizado; tags não ficam confirmadas nesta ronda.
 - Dependências: `requirements.txt` tem versões parcialmente fixadas e ranges, mas não existe lockfile completo identificado.
 
@@ -84,7 +84,7 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 ## Próximas frentes independentes
 
 1. **Revisão de integridade de dados:** PR #18 — strict JSON parsing; validar o head final e não bloquear outras frentes enquanto aguarda.
-2. **Diagnóstico operacional:** registar callback e falhas de storage no Scheduler, sem alterar semântica de retry nem executar hardware; branch `fix/scheduler-failure-logging-20261126` em curso.
+2. **Diagnóstico operacional:** PR #19 [scheduler failure logging](https://github.com/AndreVazao/ecu-pro-tune/pull/19), branch `fix/scheduler-failure-logging-20261126`; logs de callback/storage e regressões adicionadas. CI desta PR ainda pendente neste checkpoint.
 3. **Correção UX do dashboard:** tornar legenda e janela temporal do gráfico RPM precisas, ou implementar a segunda série de load com escala explicitamente definida e testes.
 4. **Scheduler UX:** desenhar uma interface de gestão de agendamentos que exponha apenas operações simuladas/gestão de perfis; proposta e testes antes de integração.
 5. **Aceitação manual:** executar e registar os 14 casos em Windows real quando o ambiente estiver disponível; não marcar PASS por inferência.
