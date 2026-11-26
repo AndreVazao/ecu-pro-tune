@@ -12,7 +12,7 @@ Aplicação desktop Python para gestão visual de perfis de calibração automó
 - Editor de mapa numérico com validação.
 - Gráfico live com matplotlib.
 - Backup de perfis e rollback.
-- Scheduler com persistência validada.
+- Scheduler com persistência validada e gestão de agendamentos simulados na GUI.
 - Testes automatizados e Windows CI.
 - Ambiente virtual isolado.
 - Nenhuma escrita física de ECU nesta fase.
@@ -48,7 +48,6 @@ O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECU
 ## Documentação de release
 
 - Histórico: CHANGELOG.md.
-- Roadmap global e critérios de prontidão: docs/PRODUCT_READINESS_ROADMAP.md.
 - Roadmap global e critérios de prontidão: docs/PRODUCT_READINESS_ROADMAP.md.
 - Plano de aceitação manual no Windows: docs/ACCEPTANCE_TEST_WINDOWS.md.
 - Registo estruturado dos 14 testes manuais: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\record_windows_acceptance.ps1`.
