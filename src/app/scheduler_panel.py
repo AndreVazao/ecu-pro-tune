@@ -112,7 +112,9 @@ class SchedulerPanel(ttk.Frame):
         selected_id = selected[0] if selected else None
         try:
             schedules = self.scheduler.list_schedules()
-            self.tree.delete(*self.tree.get_children())
+            children = self.tree.get_children()
+            if children:
+                self.tree.delete(*children)
             for item in schedules:
                 state = "CONCLUÍDO" if item["executed"] else "PENDENTE"
                 self.tree.insert(
