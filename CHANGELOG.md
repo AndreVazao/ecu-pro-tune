@@ -2,6 +2,12 @@
 
 All notable changes to ECU Pro Tune are recorded here.
 
+## Unreleased
+
+### Dashboard
+- Plot RPM and engine load as separate, explicitly scaled series (RPM left axis, load percentage right axis).
+- Correct the rolling history label to a 36-second nominal window (90 samples at 400 ms) and expose the sampling cadence.
+
 ## 0.1.0 — 2026-11-17
 
 ### Added
