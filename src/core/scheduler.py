@@ -1,18 +1,25 @@
 from __future__ import annotations
 
 import json
+import logging
 import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Callable, Any
 
+from src.core.logger import setup_logger
 from src.utils.paths import SCHEDULE_FILE
 
 
 class Scheduler(threading.Thread):
-    def __init__(self, callback: Callable[[str], None]) -> None:
+    def __init__(
+        self,
+        callback: Callable[[str], None],
+        logger: logging.Logger | None = None,
+    ) -> None:
         super().__init__(daemon=True)
         self.callback = callback
+        self.logger = logger or setup_logger("ecu_scheduler")
         self._stop_event = threading.Event()
 
     def stop(self) -> None:
@@ -87,6 +94,11 @@ class Scheduler(threading.Thread):
                     try:
                         self.callback(item["profile"])
                     except Exception:
+                        self.logger.exception(
+                            "Agendamento do perfil %s falhou; continua pendente "
+                            "e será novamente tentado.",
+                            item["profile"],
+                        )
                         continue
 
                     item["executed"] = True
@@ -96,7 +108,10 @@ class Scheduler(threading.Thread):
                     self._write_schedule_file(data)
             except (OSError, ValueError, TypeError):
                 # Keep the scheduler alive and leave malformed files untouched.
-                pass
+                self.logger.exception(
+                    "Scheduler não conseguiu processar o ficheiro de agendamentos; "
+                    "os dados existentes foram preservados."
+                )
 
             if self._stop_event.wait(5):
                 break
