@@ -195,3 +195,102 @@ def test_rollback_restore_rejects_corrupt_or_non_object_backup_without_overwrite
 
     assert profile.read_text(encoding="utf-8") == '{"rpm_limit": 7100}'
     assert not (configs / "daily_profile.json.restore.tmp").exists()
+
+@pytest.mark.parametrize("bad_json", ['{"value":NaN}', '{"value":Infinity}', '{"value":-Infinity}'])
+def test_profile_manager_load_rejects_nonstandard_json_constants(
+    tmp_path: Path, bad_json: str
+) -> None:
+    manager = ProfileManager(base_dir=tmp_path / "profiles")
+    (tmp_path / "profiles" / "invalid.json").write_text(bad_json, encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        manager.load_saved_profile("invalid")
+
+
+@pytest.mark.parametrize("bad_json", ['{"rpm":NaN}', '{"boost":Infinity}', '{"x":-Infinity}'])
+def test_ecu_manager_profile_load_rejects_nonstandard_json_constants(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_json: str
+) -> None:
+    configs = tmp_path / "configs"
+    maps = tmp_path / "maps"
+    configs.mkdir()
+    maps.mkdir()
+    (configs / "invalid.json").write_text(bad_json, encoding="utf-8")
+    monkeypatch.setattr(ecu_module, "CONFIGS_DIR", configs)
+    monkeypatch.setattr(ecu_module, "MAPS_DIR", maps)
+
+    with pytest.raises(ValueError):
+        ECUManager().load_profile("invalid.json")
+
+
+def test_ecu_manager_map_load_rejects_nonstandard_constants_and_filters_nonfinite_arrays(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configs = tmp_path / "configs"
+    maps = tmp_path / "maps"
+    configs.mkdir()
+    maps.mkdir()
+    (configs / "stage.json").write_text(
+        '{"Profile_Name":"Stage","map":"stage_map.json"}', encoding="utf-8"
+    )
+    (maps / "stage_map.json").write_text(
+        '{"safe":[1,2,3],"nan_values":[1,NaN,3],"infinite":[Infinity,2]}',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(ecu_module, "CONFIGS_DIR", configs)
+    monkeypatch.setattr(ecu_module, "MAPS_DIR", maps)
+
+    result = ECUManager().list_numeric_arrays("stage.json")
+    assert result == {}
+
+
+def test_ecu_manager_direct_numeric_arrays_filter_nonfinite_values(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configs = tmp_path / "configs"
+    maps = tmp_path / "maps"
+    configs.mkdir()
+    maps.mkdir()
+    (configs / "direct.json").write_text(
+        '{"Profile_Name":"Direct","values":[1,NaN,3]}', encoding="utf-8"
+    )
+    monkeypatch.setattr(ecu_module, "CONFIGS_DIR", configs)
+    monkeypatch.setattr(ecu_module, "MAPS_DIR", maps)
+
+    with pytest.raises(ValueError):
+        ECUManager().load_profile("direct.json")
+
+@pytest.mark.parametrize("bad_json", ['{"value":1e999}', '{"value":NaN}'])
+def test_profile_manager_rejects_overflow_and_nonfinite_json_values(
+    tmp_path: Path, bad_json: str
+) -> None:
+    manager = ProfileManager(base_dir=tmp_path / "profiles")
+    (tmp_path / "profiles" / "invalid.json").write_text(bad_json, encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        manager.load_saved_profile("invalid")
+
+
+@pytest.mark.parametrize("bad_json", ['{"config":NaN}', '{"config":1e999}'])
+def test_profile_manager_config_load_rejects_nonfinite_json_values(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_json: str
+) -> None:
+    import src.core.profile_manager as profile_module
+
+    configs = tmp_path / "configs"
+    configs.mkdir()
+    (configs / "invalid.json").write_text(bad_json, encoding="utf-8")
+    monkeypatch.setattr(profile_module, "CONFIGS_DIR", configs)
+
+    with pytest.raises(ValueError):
+        ProfileManager(base_dir=tmp_path / "profiles").load_config_profile("invalid.json")
+
+@pytest.mark.parametrize("bad_json", ['{"value":1e999}'])
+def test_profile_manager_rejects_numeric_overflow_json(
+    tmp_path: Path, bad_json: str
+) -> None:
+    manager = ProfileManager(base_dir=tmp_path / "profiles")
+    (tmp_path / "profiles" / "invalid.json").write_text(bad_json, encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        manager.load_saved_profile("invalid")

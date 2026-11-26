@@ -1,5 +1,34 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-24 — PR #18 Windows validation complete
+- PR #18 (`fix: reject nonstandard JSON values across profile loading`) remains open pending documentation refresh and final post-update CI.
+- Validated head before documentation refresh: `549766669579074d303f74ca45fe0865f7f59300`.
+- Windows CI run #172 (`45130034241`) completed SUCCESS: compileall, Python unit tests, PowerShell acceptance-validator integration, installer smoke, application/dashboard imports, Tk construction, PyInstaller build, EXE existence and version metadata, packaged startup, ZIP packaging, independent archive verification and artifact upload.
+- Release ZIP: `ECUProTune-Windows-Python311-v0.1.0.zip`; SHA-256: `ea1671f30045c9943f2894d600ca5de7632fc956d6a5df4970199c240ca3fdc6`.
+- GitHub Actions artifact ID: `14798080172`; temporary CI artifact, 14-day retention (not a permanent GitHub Release).
+- PR #18 changes strict JSON parsing across saved/config profiles, ECU profiles, maps and scheduler persistence; valid arbitrary-precision integers remain accepted, while non-standard constants and floating-point overflow are rejected.
+- Manual Windows acceptance remains outstanding: all 14 real user-machine cases must be executed; synthetic CI reports do not count.
+- No ECU hardware write, flash driver or programming path is enabled.
+
+
+## 2026-11-23 — PR #18 validation checkpoint
+- PR #17 remains merged; Windows CI #162 completed successfully.
+- PR #18 adds strict JSON decoding across saved/config profiles, ECU profiles, maps and scheduler persistence, with regression coverage.
+- Windows CI #167 exposed one overly strict test assumption: large JSON integers are valid; the test and decoder were corrected to preserve standards-compliant arbitrary-precision integers while rejecting `NaN`, infinities and float overflow.
+- Current validation: Windows CI #171 is running against the latest PR #18 head `fae181165bb0f7fcc140fe224160a1ab08a7c925`.
+- PR #18 is not merged; merge remains gated on full Windows CI success.
+- No ECU hardware write, flash or programming path is enabled.
+
+
+## 2026-11-22 — PR #17 merged / strict JSON hardening in progress
+- PR #17 — `fix: protect rollback snapshots and restore integrity` merged after Windows CI run #162 completed SUCCESS.
+- Run #162 verified: Python tests, PowerShell acceptance-validator integration, clean installer smoke, imports, Tk construction, PyInstaller, EXE metadata, packaged startup, release ZIP verification and artifact upload all passed.
+- Merge commit: `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`.
+- New branch: `fix/strict-json-data-loading-20261122`.
+- Current work hardens JSON loading to reject NaN/Infinity in saved/config profiles, ECU profiles, maps and scheduler files, and filters non-finite map arrays.
+- CI validation is pending for the strict-JSON changes. No hardware ECU write, flash or programming path has been introduced.
+
+
 ## 2026-11-21 — Persistent checkpoint / estado consolidado
 - Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
 - PR #13 executa testes reais PowerShell para o validador de relatórios sintéticos; cobre 14/14 PASS, INCOMPLETE bloqueado por -RequirePass, IDs duplicados e totais inconsistentes.

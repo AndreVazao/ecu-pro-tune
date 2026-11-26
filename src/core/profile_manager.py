@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from src.utils.json_utils import strict_json_loads
 from src.utils.paths import PROFILES_DIR, CONFIGS_DIR, ensure_directories
 
 
@@ -55,7 +56,7 @@ class ProfileManager:
         target = self._profile_path(name, self.base_dir)
         if not target.exists():
             return None
-        data = json.loads(target.read_text(encoding="utf-8"))
+        data = strict_json_loads(target.read_text(encoding="utf-8"))
         if not isinstance(data, dict):
             raise ValueError("O ficheiro de perfil não contém um objeto JSON.")
         return data
@@ -72,7 +73,7 @@ class ProfileManager:
         target = CONFIGS_DIR / filename
         if not target.exists():
             return None
-        data = json.loads(target.read_text(encoding="utf-8"))
+        data = strict_json_loads(target.read_text(encoding="utf-8"))
         if not isinstance(data, dict):
             raise ValueError("A configuração não contém um objeto JSON.")
         return data
