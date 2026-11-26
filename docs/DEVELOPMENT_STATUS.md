@@ -1,16 +1,17 @@
 # ECU Pro Tune — Development Status
 
-## 2026-11-26 — Auditoria global e avanço independente do Scheduler
+## 2026-11-26 — integrações strict JSON, Scheduler e dashboard
 
-- Revalidação feita dinamicamente: default branch `main`; início da auditoria: `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2` (22-11-2026). PR #18 foi integrada em 26-11-2026 no commit `1fae378641740ab9ca61900dc3f24df5c514d885`.
-- Branches: 19 no total (18 além de main); a API reportou `protected=false` para as branches listadas, pelo que a proteção da main não está confirmada.
-- PR #18 [strict JSON loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18) integrada (squash merge `1fae378641740ab9ca61900dc3f24df5c514d885`); CI #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes PASS. Windows CI run #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram em 0.36s. Installer, imports, construção Tk, PyInstaller, metadados EXE, startup smoke, ZIP e verificação independente: PASS. Artefacto temporário ID 14969454012, retenção 14 dias. ZIP SHA-256 `e244aa88af842dd434f0de043ab8e2e7e9dcb2e97499447c256a905a7b6ae19f`.
-- Main CI run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS: 59 testes passaram em 0.23s; installer, PowerShell validator, imports, Tk, EXE, versão, startup, ZIP, hash, verificação independente e upload: PASS. Artefacto temporário ID 14764488716. SHA-256 ZIP `622fac715dba1797d3c20f329138cb43ed520ed78ad99dd70af962eb17d28b4e`.
-- Releases: API devolveu lista vazia. Tags não confirmadas porque endpoint não foi suportado pela ferramenta de leitura usada nesta auditoria. Não há issue aberta independente identificada.
-- Lacuna de produto confirmada no código: Scheduler core não está exposto na GUI; dashboard gráfico mostra apenas RPM, apesar de legenda RPM + load e duração nominal incorreta. Próximas frentes UX documentadas no roadmap.
-- Avanço: branch `fix/scheduler-failure-logging-reconciled-20261126`, PR #21 [scheduler diagnostics](https://github.com/AndreVazao/ecu-pro-tune/pull/21), branch reconciliada com a main pós-PR #18; strict JSON e diagnóstico de callback/storage combinados. Callback e falhas de armazenamento agora são registadas com traceback; tarefa falhada continua pendente/retry e ficheiro inválido não é reescrito. Foram acrescentados testes de regressão e roadmap global `docs/PRODUCT_READINESS_ROADMAP.md`, ligado no README.
-- PR #21 CI #177 [45745910572](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45745910572) SUCCESS no head anterior: 60 testes passaram em 0.29s e todo o build/package gate passou. Após a integração da PR #18, o Scheduler foi reconciliado para preservar simultaneamente strict JSON e logging; é obrigatória nova CI sobre o head combinado antes do merge.
-- Aceitação manual real: 14 casos continuam pendentes; não existe relatório 14/14 PASS. Hardware real não testado nem ligado. Release não publicada.
+- Main atual após integrações: `e71104c4c7d576406cd98435e9baf2c30c05fa17`.
+- PR #18 — strict JSON loading: integrada em `1fae378641740ab9ca61900dc3f24df5c514d885`; CI #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes PASS, build Windows e pacote verificados.
+- PR #21 — Scheduler diagnostics + strict JSON reconciliados: integrada em `5f327ffab2405a5100b05a0c5ab633adff371c4c`; CI #181 [45760421245](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760421245) SUCCESS, 73 testes PASS em 0.36s; compileall, PowerShell, installer, imports, Tk, PyInstaller, EXE metadata, packaged startup, ZIP, verificação independente e upload PASS. Artefacto temporário ID `15089148961`; SHA-256 `52e511f839d919b79203232a26db160da417a37fa497b29c5ab00528b8304072`.
+- PR #22 — gráfico RPM + load e janela temporal: integrada em `e71104c4c7d576406cd98435e9baf2c30c05fa17`; CI #182 [45760551886](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760551886) SUCCESS, 77 testes PASS em 4.00s; build Windows, startup, ZIP, verificação independente e upload PASS. Artefacto temporário ID `15089362487`; SHA-256 `2ddccd09cfa3b83b90898c0751580646fefdc7ef1646ebad0e0c7531b71d96cb`.
+- Scheduler: strict JSON continua ativo; falhas de callback e storage são registadas com traceback; tarefas com callback falhado permanecem pendentes para retry; ficheiros ilegíveis não são reescritos.
+- Dashboard: RPM e load são desenhados como séries distintas, com escala RPM 0–8000 à esquerda e load 0–100% à direita. Janela nominal corrigida para 36 s (90 amostras × 400 ms).
+- Scheduler ainda não está exposto na GUI. Gestão de agendamentos na interface permanece trabalho futuro.
+- Windows CI de push na main após PR #22: run [45760863852](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760863852) em execução no momento deste checkpoint.
+- Aceitação manual real: 14 casos continuam pendentes; não existe relatório real 14/14 PASS. Hardware real não testado nem ligado. Release não publicada.
+- Segurança: sem ECU write, flash driver, programação ou calibração física.
 
 ## 2026-11-21 — Persistent checkpoint / estado consolidado
 - Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
