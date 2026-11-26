@@ -5,7 +5,6 @@ Aplicação desktop Python para gestão visual de perfis de calibração automó
 ## Estado atual
 
 - Versão atual: 0.1.0.
-
 - GUI ttkbootstrap funcional.
 - Modos Performance e Showcase.
 - Dashboard com telemetria simulada.
@@ -15,7 +14,6 @@ Aplicação desktop Python para gestão visual de perfis de calibração automó
 - Backup de perfis e rollback.
 - Scheduler com persistência validada.
 - Testes automatizados e Windows CI.
-- Leitura JSON estrita: rejeita NaN/Infinity em perfis, mapas e agendamentos.
 - Ambiente virtual isolado.
 - Nenhuma escrita física de ECU nesta fase.
 
@@ -50,6 +48,8 @@ O build cria dist\ECUProTune\ECUProTune.exe e o pacote versionado em release\ECU
 ## Documentação de release
 
 - Histórico: CHANGELOG.md.
+- Roadmap global e critérios de prontidão: docs/PRODUCT_READINESS_ROADMAP.md.
+- Roadmap global e critérios de prontidão: docs/PRODUCT_READINESS_ROADMAP.md.
 - Plano de aceitação manual no Windows: docs/ACCEPTANCE_TEST_WINDOWS.md.
 - Registo estruturado dos 14 testes manuais: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\record_windows_acceptance.ps1`.
 - Validação do relatório e gate de aceitação: `scripts\\validate_windows_acceptance.ps1`.

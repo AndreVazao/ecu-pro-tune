@@ -103,8 +103,10 @@ def test_scheduler_executes_due_items_once_and_keeps_future_items(
     assert data[1]["executed"] is False
 
 
-def test_scheduler_does_not_mark_callback_failure_as_executed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_scheduler_logs_callback_failure_and_keeps_schedule_pending(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     schedule_file = tmp_path / "schedules.json"
     schedule_file.write_text(
@@ -120,17 +122,59 @@ def test_scheduler_does_not_mark_callback_failure_as_executed(
         encoding="utf-8",
     )
     monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+    logger = logging.getLogger("ecu-scheduler-callback-test")
+    caplog.set_level(logging.ERROR, logger=logger.name)
     scheduler: Scheduler
 
     def callback(_profile: str) -> None:
         scheduler.stop()
         raise RuntimeError("temporary callback failure")
 
-    scheduler = Scheduler(callback)
+    scheduler = Scheduler(callback, logger=logger)
     scheduler.run()
 
     data = json.loads(schedule_file.read_text(encoding="utf-8"))
     assert data[0]["executed"] is False
+    assert any(
+        "retry.json" in record.getMessage()
+        and "novamente tentado" in record.getMessage()
+        and record.exc_info is not None
+        for record in caplog.records
+    )
+
+
+def test_scheduler_logs_invalid_storage_and_preserves_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    schedule_file = tmp_path / "schedules.json"
+    original = "{ malformed scheduler JSON"
+    schedule_file.write_text(original, encoding="utf-8")
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+    logger = logging.getLogger("ecu-scheduler-storage-test")
+    caplog.set_level(logging.ERROR, logger=logger.name)
+    scheduler = Scheduler(lambda _profile: None, logger=logger)
+
+    class StopOnWait:
+        def is_set(self) -> bool:
+            return False
+
+        def set(self) -> None:
+            pass
+
+        def wait(self, _timeout: float) -> bool:
+            return True
+
+    scheduler._stop_event = StopOnWait()  # type: ignore[assignment]
+    scheduler.run()
+
+    assert schedule_file.read_text(encoding="utf-8") == original
+    assert any(
+        "ficheiro de agendamentos" in record.getMessage()
+        and record.exc_info is not None
+        for record in caplog.records
+    )
 
 
 def test_logger_writes_utf8_records_and_can_be_closed(
@@ -153,16 +197,3 @@ def test_logger_writes_utf8_records_and_can_be_closed(
         for handler in list(logger.handlers):
             logger.removeHandler(handler)
             handler.close()
-
-@pytest.mark.parametrize("bad_json", ['[{"profile":"x","run_at":"2026-01-01","executed":false,"bad":NaN}]', 'NaN', '[Infinity]'])
-def test_scheduler_rejects_nonstandard_json_constants_and_preserves_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_json: str
-) -> None:
-    schedule_file = tmp_path / "schedules.json"
-    schedule_file.write_text(bad_json, encoding="utf-8")
-    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
-
-    with pytest.raises(ValueError, match="ilegível"):
-        Scheduler.add_schedule("stage1.json", datetime.now().isoformat())
-
-    assert schedule_file.read_text(encoding="utf-8") == bad_json
