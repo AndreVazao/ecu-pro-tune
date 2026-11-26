@@ -87,16 +87,21 @@ jobs:
           import tkinter as tk
           import ttkbootstrap as ttk
           from src.app.dashboard import Dashboard
+          from src.app.scheduler_panel import SchedulerPanel
 
           root = ttk.Window(themename="darkly")
           root.withdraw()
           dashboard = Dashboard(root, "performance", logging.getLogger("ci-dashboard"))
           dashboard.pack(fill="both", expand=True)
           root.update_idletasks()
+          panel = SchedulerPanel(dashboard, dashboard.scheduler, logging.getLogger("ci-scheduler-panel"))
+          panel.pack(fill="both", expand=True)
+          root.update_idletasks()
           root.update()
+          panel.destroy()
           dashboard.destroy()
           root.destroy()
-          print("Tk dashboard construction: OK")
+          print("Tk dashboard and scheduler panel construction: OK")
           '@ | python -
 
       - name: Install PyInstaller

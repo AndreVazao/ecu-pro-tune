@@ -8,7 +8,9 @@ from collections import deque
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import BOTH, LEFT, RIGHT, X, Y
 
+from src.app.scheduler_panel import SchedulerPanel
 from src.core.ecu_manager import ECUManager
+from src.core.scheduler import Scheduler
 from src.core.sound_manager import SoundManager
 from src.tuning.tuning_panel import TuningPanel
 
@@ -33,10 +35,23 @@ class Dashboard(ttk.Frame):
     HISTORY_WINDOW_SECONDS = HISTORY_SAMPLES * SAMPLE_INTERVAL_MS / 1000
     RPM_CHART_MAX = 8000
 
-    def __init__(self, parent, mode: str, logger) -> None:
+    def __init__(
+        self,
+        parent,
+        mode: str,
+        logger,
+        scheduler: Scheduler | None = None,
+    ) -> None:
         super().__init__(parent)
         self.mode = mode
         self.logger = logger
+        self.scheduler = scheduler or Scheduler(
+            lambda profile: logger.info(
+                "Agendamento simulado concluído para %s; nenhuma ação de hardware executada.",
+                profile,
+            ),
+            logger,
+        )
         self.sound = SoundManager("pro" if mode == "showcase" else "light")
         self.ecu = ECUManager()
         self.running = False
@@ -174,6 +189,10 @@ class Dashboard(ttk.Frame):
         ttk.Button(
             footer, text="PROFILES / MAPS", bootstyle="info",
             command=self.open_tuning,
+        ).pack(side=LEFT, padx=4)
+        ttk.Button(
+            footer, text="SCHEDULER", bootstyle="warning",
+            command=self.open_scheduler,
         ).pack(side=LEFT, padx=4)
         ttk.Label(
             footer,
@@ -326,6 +345,17 @@ class Dashboard(ttk.Frame):
             panel, text="← DASHBOARD", bootstyle="secondary",
             command=self.restore_dashboard,
         ).pack(anchor="w", padx=8, pady=6, before=panel.winfo_children()[0])
+
+    def open_scheduler(self) -> None:
+        self._stop_simulation_for_navigation()
+        for child in self.winfo_children():
+            child.destroy()
+        panel = SchedulerPanel(self, self.scheduler, self.logger)
+        panel.pack(fill=BOTH, expand=True)
+        ttk.Button(
+            panel, text="← DASHBOARD", bootstyle="secondary",
+            command=self.restore_dashboard,
+        ).pack(anchor="w", padx=8, pady=(0, 8), before=panel.winfo_children()[0])
 
     def restore_dashboard(self) -> None:
         for child in self.winfo_children():
