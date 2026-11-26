@@ -1,5 +1,19 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-26 — Scheduler GUI integrado
+
+- Main após PR #23: `6670fd2e4b89303927fb0b1915b919f54e3f298c`.
+- PR #18 strict JSON integrada: `1fae378641740ab9ca61900dc3f24df5c514d885`; CI #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes PASS.
+- PR #21 Scheduler diagnostics integrada: `5f327ffab2405a5100b05a0c5ab633adff371c4c`; CI #181 [45760421245](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760421245) SUCCESS, 73 testes PASS.
+- PR #22 dashboard RPM + load integrada: `e71104c4c7d576406cd98435e9baf2c30c05fa17`; CI #182 [45760551886](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760551886) SUCCESS, 77 testes PASS.
+- PR #23 Scheduler GUI integrada: `6670fd2e4b89303927fb0b1915b919f54e3f298c`; CI #183 [45761454999](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761454999) SUCCESS, 78 testes PASS em 3.46s. Inclui construção Tk do SchedulerPanel, cancelamento, compatibilidade de entradas legacy, build PyInstaller, arranque empacotado e ZIP verificado.
+- Scheduler: gestão local na GUI permite listar, criar, atualizar e cancelar agendamentos pendentes. Novas entradas têm UUID; entradas antigas sem ID continuam legíveis/canceláveis. Leituras/escritas serializadas com RLock.
+- Scheduler inicia com a aplicação e termina no shutdown. Callback apenas regista conclusão simulada; nenhuma alteração de perfil/calibração ou escrita ECU é executada.
+- Dashboard: RPM e load desenhados em séries distintas, escalas 0–8000 RPM e 0–100% load, janela nominal de 36 s (90 amostras × 400 ms).
+- Main push CI após PR #23: run [45761702198](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761702198) em execução neste checkpoint.
+- Aceitação manual real: 14 casos continuam pendentes; não existe relatório 14/14 PASS. Hardware real não testado nem ligado. Release não publicada.
+
+
 ## 2026-11-26 — integrações strict JSON, Scheduler e dashboard
 
 - Main atual após integrações: `e71104c4c7d576406cd98435e9baf2c30c05fa17`.
