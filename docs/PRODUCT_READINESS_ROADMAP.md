@@ -40,7 +40,7 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 ## Evidência GitHub desta auditoria
 
 - Main: `d0eb6b2a`, commit de 22-11-2026; último commit observado nessa branch.
-- PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): aberta, sem reviews registadas; head `4ce93986`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS observado; 75 testes passaram em 0.36s, incluindo build e pacote.
+- PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): integrada em 26-11-2026 no commit `1fae378641740ab9ca61900dc3f24df5c514d885`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram.
 - Branches: 19 no total, incluindo `main`; a API reportou `protected=false` nas branches listadas, pelo que a proteção de `main` não está confirmada.
 - Issues: a listagem aberta observada contém a PR #18; não foi identificada issue aberta independente.
 - CI main: run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS; run #155 [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) foi revalidado: 59 testes passaram em 0.23s; build/package gates também SUCCESS.
@@ -84,7 +84,7 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 ## Próximas frentes independentes
 
 1. **Revisão de integridade de dados:** PR #18 — strict JSON parsing; validar o head final e não bloquear outras frentes enquanto aguarda.
-2. **Diagnóstico operacional:** PR #19 [scheduler failure logging](https://github.com/AndreVazao/ecu-pro-tune/pull/19), branch `fix/scheduler-failure-logging-20261126`; logs de callback/storage e regressões adicionadas. Windows CI run #177 [45745910572](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45745910572) SUCCESS: 60 testes em 0.29s; build, EXE, startup, ZIP, verificação independente e upload PASS. Artefacto temporário `15083666609`, SHA-256 `e727c48de2f4e56b8da5139336a74f29b69caf8b9e37e1e03d01a9bc1734b55e` (expira 10-12-2026).
+2. **Diagnóstico operacional:** PR #19 [scheduler failure logging](https://github.com/AndreVazao/ecu-pro-tune/pull/19), branch `fix/scheduler-failure-logging-20261126`; logs de callback/storage e regressões adicionadas. CI #177 passou no head anterior (60 testes, 0.29s), mas a branch foi reconciliada após a integração da PR #18 para preservar strict JSON e logging no mesmo Scheduler. Nova CI do head combinado é obrigatória antes do merge.
 3. **Correção UX do dashboard:** tornar legenda e janela temporal do gráfico RPM precisas, ou implementar a segunda série de load com escala explicitamente definida e testes.
 4. **Scheduler UX:** desenhar uma interface de gestão de agendamentos que exponha apenas operações simuladas/gestão de perfis; proposta e testes antes de integração.
 5. **Aceitação manual:** executar e registar os 14 casos em Windows real quando o ambiente estiver disponível; não marcar PASS por inferência.
