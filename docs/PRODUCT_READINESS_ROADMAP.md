@@ -3,7 +3,8 @@
 **Auditoria:** 26-11-2026 (UTC)  
 **Repositório:** [AndreVazao/ecu-pro-tune](https://github.com/AndreVazao/ecu-pro-tune)  
 **Branch principal confirmada:** `main`  
-**SHA da main no início desta auditoria:** `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`  
+**SHA da main no início da auditoria:** `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`  
+**SHA atual após PR #23:** `6670fd2e4b89303927fb0b1915b919f54e3f298c`  
 **Versão declarada:** 0.1.0
 
 Este documento acompanha o produto completo, não apenas uma PR ou branch. Os estados são baseados em código, documentação, API do GitHub e resultados de CI observados. «Implementado» não significa aceitação manual nem validação em ECU.
@@ -16,11 +17,11 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 |---|---|---|
 | GUI desktop | Implementada | ttkbootstrap/Tk; CI constrói o dashboard; falta aceitação interativa em Windows de utilizador |
 | Performance / Showcase | Implementados | Modos presentes na seleção e dashboard |
-| Dashboard | Simulação local | RPM, boost, load, temperatura, lambda, potência estimada, gauges e gráfico; sem telemetria real |
+| Dashboard | Simulação local | RPM e load em séries distintas com escalas explícitas; janela nominal 36 s; sem telemetria real |
 | Perfis e mapas | Implementados | JSON, editor numérico, validação e carregamento; validação manual pendente |
 | Backup / rollback | Implementados | cópia/restauro, nomes seguros, backup sem sobrescrever no mesmo segundo e testes de backup corrompido |
-| Scheduler | Serviço core implementado | Persistência e callback; não há fluxo de agendamento exposto na GUI observado nesta auditoria |
-| Logs | Implementados | Rotação UTF-8; o scheduler atualmente não regista falhas de callback/storage na main; branch corretiva em validação |
+| Scheduler | Core + GUI simulada | Gestão de agendamentos na GUI: listar, criar, atualizar e cancelar; callbacks apenas simulados, sem escrita ECU |
+| Logs | Implementados | Rotação UTF-8; falhas de callback/storage do Scheduler registadas com traceback e retry pendente |
 | Instalação | CI validado | smoke do instalador em Windows CI; instalação no PC de utilizador por confirmar |
 | Build / pacote | CI validado | PyInstaller onedir, metadados Windows, ZIP, manifest e SHA-256 |
 | Aceitação manual | PENDENTE | 14 casos; não existe relatório de aceitação real 14/14 PASS no repositório |
@@ -39,10 +40,13 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 
 ## Evidência GitHub desta auditoria
 
-- Main: `d0eb6b2a`, commit de 22-11-2026; último commit observado nessa branch.
+- Main atual: `6670fd2e4b89303927fb0b1915b919f54e3f298c` após integração de PR #23 em 26-11-2026.
 - PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): integrada em 26-11-2026 no commit `1fae378641740ab9ca61900dc3f24df5c514d885`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram.
-- Branches: 19 no total, incluindo `main`; a API reportou `protected=false` nas branches listadas, pelo que a proteção de `main` não está confirmada.
-- Issues: a listagem aberta observada contém a PR #18; não foi identificada issue aberta independente.
+- PR #21 — [Scheduler diagnostics](https://github.com/AndreVazao/ecu-pro-tune/pull/21): integrada; CI #181 SUCCESS, 73 testes PASS.
+- PR #22 — [dashboard RPM + load](https://github.com/AndreVazao/ecu-pro-tune/pull/22): integrada; CI #182 SUCCESS, 77 testes PASS.
+- PR #23 — [Scheduler GUI](https://github.com/AndreVazao/ecu-pro-tune/pull/23): integrada; CI #183 SUCCESS, 78 testes PASS. Main push CI #45761702198 em execução neste checkpoint.
+- A proteção formal de `main` não foi reavaliada nesta ronda.
+- Issues independentes abertas: não reavaliadas neste checkpoint.
 - CI main: run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS; run #155 [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) foi revalidado: 59 testes passaram em 0.23s; build/package gates também SUCCESS.
 - Releases: lista vazia. A listagem de tags não foi suportada pelo endpoint/fetch utilizado; tags não ficam confirmadas nesta ronda.
 - Dependências: `requirements.txt` tem versões parcialmente fixadas e ranges, mas não existe lockfile completo identificado.
@@ -62,7 +66,7 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 - [x] Modos Performance e Showcase.
 - [x] Dashboard de simulação, navegação e painel de perfis/mapas.
 - [ ] Aceitação interativa dos 14 casos em Windows real.
-- [ ] Agendamento disponível na interface, com estado visível, cancelamento/gestão e feedback de falha; atualmente o serviço core não é observado na GUI.
+- [x] Agendamento disponível na interface com listagem, criação, estado, cancelamento e feedback; execução do callback permanece explicitamente simulada.
 - [ ] Corrigir discrepâncias de UI documentadas/confirmadas durante revisão (por exemplo, a legenda do gráfico afirma RPM + load, mas o histórico desenhado contém apenas RPM; a duração indicada também deve corresponder à cadência real).
 
 ### Gate C — Instalação e distribuição
@@ -86,7 +90,7 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 1. **Revisão de integridade de dados:** PR #18 integrada; ampliar testes de recuperação e integridade em todos os fluxos de leitura/gravação.
 2. **Diagnóstico operacional:** PR #21 integrada; strict JSON e logging de callback/storage estão na main, com 73 testes PASS no CI #181.
 3. **Correção UX do dashboard:** tornar legenda e janela temporal do gráfico RPM precisas, ou implementar a segunda série de load com escala explicitamente definida e testes.
-4. **Scheduler UX:** desenhar uma interface de gestão de agendamentos que exponha apenas operações simuladas/gestão de perfis; proposta e testes antes de integração.
+4. **Scheduler UX:** PR #23 integrada; próxima melhoria é validação interativa e usabilidade em Windows real.
 5. **Aceitação manual:** executar e registar os 14 casos em Windows real quando o ambiente estiver disponível; não marcar PASS por inferência.
 
 ## Regra de conclusão
