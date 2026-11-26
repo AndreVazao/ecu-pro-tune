@@ -32,7 +32,7 @@ def test_add_schedule_appends_valid_entries(
     [
         ("", datetime.now().isoformat()),
         ("../outside.json", datetime.now().isoformat()),
-        (r"..\\outside.json", datetime.now().isoformat()),
+        (r"..\outside.json", datetime.now().isoformat()),
         ("stage1.json", "not-a-date"),
     ],
 )
