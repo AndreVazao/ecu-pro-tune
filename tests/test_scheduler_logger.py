@@ -197,3 +197,60 @@ def test_logger_writes_utf8_records_and_can_be_closed(
         for handler in list(logger.handlers):
             logger.removeHandler(handler)
             handler.close()
+
+
+
+def test_scheduler_lists_and_cancels_pending_entries(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    schedule_file = tmp_path / "schedules.json"
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+    Scheduler.add_schedule("stage1.json", (datetime.now() + timedelta(hours=1)).isoformat())
+
+    schedules = Scheduler.list_schedules()
+    assert len(schedules) == 1
+    schedule_id = schedules[0]["id"]
+    assert schedule_id
+    assert schedules[0]["executed"] is False
+
+    assert Scheduler.cancel_schedule(schedule_id) is True
+    assert Scheduler.list_schedules() == []
+
+
+def test_scheduler_can_cancel_legacy_entry_without_persisted_id(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    schedule_file = tmp_path / "schedules.json"
+    schedule_file.write_text(
+        json.dumps(
+            [{
+                "profile": "legacy.json",
+                "run_at": (datetime.now() + timedelta(hours=1)).isoformat(),
+                "executed": False,
+            }]
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+
+    schedules = Scheduler.list_schedules()
+    assert schedules[0]["id"] == "legacy:0"
+    assert Scheduler.cancel_schedule("legacy:0") is True
+    assert Scheduler.list_schedules() == []
+
+
+def test_scheduler_refuses_to_cancel_executed_entry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    schedule_file = tmp_path / "schedules.json"
+    original = [{
+        "id": "completed-1",
+        "profile": "stage1.json",
+        "run_at": datetime.now().isoformat(),
+        "executed": True,
+    }]
+    schedule_file.write_text(json.dumps(original), encoding="utf-8")
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+
+    assert Scheduler.cancel_schedule("completed-1") is False
+    assert json.loads(schedule_file.read_text(encoding="utf-8")) == original
