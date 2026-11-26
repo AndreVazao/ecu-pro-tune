@@ -4,6 +4,12 @@ All notable changes to ECU Pro Tune are recorded here.
 
 ## Unreleased
 
+### Dashboard
+- Plot RPM and engine load as separate, explicitly scaled series (RPM left axis, load percentage right axis).
+- Correct the rolling history label to a 36-second nominal window (90 samples at 400 ms) and expose the sampling cadence.
+
+## Unreleased
+
 ### Security and data integrity
 - Reject non-standard JSON constants (`NaN`, `Infinity`, `-Infinity`) and floating-point overflow in saved/config profiles, ECU profiles, maps and scheduler data.
 - Preserve valid arbitrary-precision JSON integers while rejecting non-finite floating-point values.
