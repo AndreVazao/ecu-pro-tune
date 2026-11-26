@@ -1,5 +1,17 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-26 — Auditoria global e avanço independente do Scheduler
+
+- Revalidação feita dinamicamente: default branch `main`, SHA `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`; último commit observado em 22-11-2026.
+- Branches: 19 no total (18 além de main); a API reportou `protected=false` para as branches listadas, pelo que a proteção da main não está confirmada.
+- PR #18 [strict JSON loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18) continua aberta, sem reviews registadas, head `4ce93986`. Windows CI run #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram em 0.36s. Installer, imports, construção Tk, PyInstaller, metadados EXE, startup smoke, ZIP e verificação independente: PASS. Artefacto temporário ID 14969454012, retenção 14 dias. ZIP SHA-256 `e244aa88af842dd434f0de043ab8e2e7e9dcb2e97499447c256a905a7b6ae19f`.
+- Main CI run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS: 59 testes passaram em 0.23s; installer, PowerShell validator, imports, Tk, EXE, versão, startup, ZIP, hash, verificação independente e upload: PASS. Artefacto temporário ID 14764488716. SHA-256 ZIP `622fac715dba1797d3c20f329138cb43ed520ed78ad99dd70af962eb17d28b4e`.
+- Releases: API devolveu lista vazia. Tags não confirmadas porque endpoint não foi suportado pela ferramenta de leitura usada nesta auditoria. Não há issue aberta independente identificada.
+- Lacuna de produto confirmada no código: Scheduler core não está exposto na GUI; dashboard gráfico mostra apenas RPM, apesar de legenda RPM + load e duração nominal incorreta. Próximas frentes UX documentadas no roadmap.
+- Avanço: branch `fix/scheduler-failure-logging-20261126`, PR #19 [scheduler diagnostics](https://github.com/AndreVazao/ecu-pro-tune/pull/19), head `b0f7c5e6`. Callback e falhas de armazenamento agora são registadas com traceback; tarefa falhada continua pendente/retry e ficheiro inválido não é reescrito. Foram acrescentados testes de regressão e roadmap global `docs/PRODUCT_READINESS_ROADMAP.md`, ligado no README.
+- PR #19 CI: pendente no checkpoint deste documento. Não houve merge nem alteração direta de main.
+- Aceitação manual real: 14 casos continuam pendentes; não existe relatório 14/14 PASS. Hardware real não testado nem ligado. Release não publicada.
+
 ## 2026-11-21 — Persistent checkpoint / estado consolidado
 - Handoff verificado contra main: PR #12, #13, #14 e #15 estão integrados.
 - PR #13 executa testes reais PowerShell para o validador de relatórios sintéticos; cobre 14/14 PASS, INCOMPLETE bloqueado por -RequirePass, IDs duplicados e totais inconsistentes.
