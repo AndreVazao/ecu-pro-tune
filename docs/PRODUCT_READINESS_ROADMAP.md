@@ -83,8 +83,8 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 
 ## Próximas frentes independentes
 
-1. **Revisão de integridade de dados:** PR #18 — strict JSON parsing; validar o head final e não bloquear outras frentes enquanto aguarda.
-2. **Diagnóstico operacional:** PR #21 [scheduler failure logging](https://github.com/AndreVazao/ecu-pro-tune/pull/21), branch `fix/scheduler-failure-logging-reconciled-20261126`; logs de callback/storage e regressões adicionadas. CI #177 passou no head anterior (60 testes, 0.29s), mas a branch foi reconciliada após a integração da PR #18 para preservar strict JSON e logging no mesmo Scheduler. Nova CI do head combinado é obrigatória antes do merge.
+1. **Revisão de integridade de dados:** PR #18 integrada; ampliar testes de recuperação e integridade em todos os fluxos de leitura/gravação.
+2. **Diagnóstico operacional:** PR #21 integrada; strict JSON e logging de callback/storage estão na main, com 73 testes PASS no CI #181.
 3. **Correção UX do dashboard:** tornar legenda e janela temporal do gráfico RPM precisas, ou implementar a segunda série de load com escala explicitamente definida e testes.
 4. **Scheduler UX:** desenhar uma interface de gestão de agendamentos que exponha apenas operações simuladas/gestão de perfis; proposta e testes antes de integração.
 5. **Aceitação manual:** executar e registar os 14 casos em Windows real quando o ambiente estiver disponível; não marcar PASS por inferência.
