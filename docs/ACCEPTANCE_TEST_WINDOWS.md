@@ -81,9 +81,9 @@ This plan covers the user-machine checks that GitHub Actions cannot fully replac
 
 15. **Scheduler GUI (simulação)**
     - Open Scheduler management from the dashboard and select a listed profile.
-    - Create a future schedule; expected: it appears as PENDING and refresh does not duplicate or remove it.
+    - Create a future schedule; expected: it appears as PENDENTE and refresh does not duplicate or remove it.
     - Select and cancel that pending entry; expected: it disappears and the cancellation feedback is shown.
-    - Create a second schedule for a near-future time and wait for the simulated callback; expected: the entry becomes COMPLETED and the log states that no hardware action occurred.
+    - Create a second schedule for a near-future time and wait for the simulated callback; expected: the entry becomes CONCLUÍDO and the log states that no hardware action occurred.
     - Expected: the test remains simulation-only; no ECU/vehicle connection, calibration write or profile change occurs.
 
 ## Result recording
