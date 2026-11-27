@@ -141,7 +141,7 @@ def test_release_verifier_rejects_zip_slip_and_duplicate_entries() -> None:
 
 
 
-def test_windows_acceptance_recorder_captures_all_fourteen_cases() -> None:
+def test_windows_acceptance_recorder_captures_all_fifteen_cases() -> None:
     script = (ROOT / "scripts" / "record_windows_acceptance.ps1").read_text(
         encoding="utf-8"
     )
