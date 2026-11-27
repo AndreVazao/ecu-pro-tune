@@ -32,7 +32,8 @@ $cases = @(
     @{ id = 11; title = "Metadados do EXE"; detail = "Confirmar FileVersion e ProductVersion iguais a $applicationVersion.0." },
     @{ id = 12; title = "Extração do ZIP"; detail = "Extrair para um caminho com espaços e iniciar ECUProTune.exe." },
     @{ id = 13; title = "Integridade da release"; detail = "Comparar SHA256SUMS.txt com BUILD-MANIFEST.json e o ZIP." },
-    @{ id = 14; title = "Fronteira de segurança"; detail = "Confirmar que não existe escrita física ECU, flash ou programação hardware." }
+    @{ id = 14; title = "Fronteira de segurança"; detail = "Confirmar que não existe escrita física ECU, flash ou programação hardware." },
+    @{ id = 15; title = "Scheduler GUI (simulação)"; detail = "Criar agendamento futuro, confirmar PENDENTE, cancelar e confirmar remoção; verificar callback apenas simulado." }
 )
 
 $os = Get-CimInstance -ClassName Win32_OperatingSystem

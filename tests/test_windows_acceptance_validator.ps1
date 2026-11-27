@@ -45,7 +45,8 @@ $caseTitles = @(
     "Metadados do EXE",
     "Extração do ZIP",
     "Integridade da release",
-    "Fronteira de segurança"
+    "Fronteira de segurança",
+    "Scheduler GUI (simulação)"
 )
 
 $cases = for ($index = 0; $index -lt $caseTitles.Count; $index++) {
@@ -64,8 +65,8 @@ $validReport = [ordered]@{
     recorded_at_utc = (Get-Date).ToUniversalTime().ToString("o")
     overall_result = "PASS"
     totals = [ordered]@{
-        total = 14
-        passed = 14
+        total = 15
+        passed = 15
         failed = 0
         skipped = 0
     }
@@ -111,13 +112,13 @@ try {
     Write-Fixture -Report $validReport -Path $validPath
     $validExit = Invoke-ValidatorProcess -Path $validPath -RequirePass
     if ($validExit -ne 0) {
-        throw "A valid 14/14 PASS report was rejected (exit $validExit)."
+        throw "A valid 15/15 PASS report was rejected (exit $validExit)."
     }
-    Write-Host "PASS: valid 14/14 report accepted with -RequirePass."
+    Write-Host "PASS: valid 15/15 report accepted with -RequirePass."
 
     $incompleteReport = $validReport | ConvertTo-Json -Depth 8 | ConvertFrom-Json
-    $incompleteReport.cases[13].result = "SKIP"
-    $incompleteReport.totals.passed = 13
+    $incompleteReport.cases[14].result = "SKIP"
+    $incompleteReport.totals.passed = 14
     $incompleteReport.totals.skipped = 1
     $incompleteReport.overall_result = "INCOMPLETE"
     $incompletePath = Join-Path $tempDirectory "incomplete.json"

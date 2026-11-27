@@ -1,5 +1,17 @@
 # ECU Pro Tune — Development Status
 
+## 2026-11-27 — Revalidação global e aceitação Scheduler GUI
+
+- Main confirmada: `574813fb3ad8f90ad5f34af0a7fd2967c2c8d4ee`; branch `main`; versão 0.1.0.
+- Main CI #200 [45761769528](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761769528) **SUCCESS**: 78 testes PASS, 14 warnings; compileall, PowerShell validator, installer smoke, imports, Tk, PyInstaller, metadata, packaged startup, ZIP e verificação independente PASS. Artifact [15089144559](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761769528/artifacts/15089144559) temporário.
+- PR #23 Scheduler GUI integrada; PR #21 diagnostics, #22 dashboard RPM+load também integradas. PR #19/#20 foram fechadas sem merge por reconciliação com #21/#22.
+- Estado de Scheduler corrigido: UI lista, cria, cancela e refresca agendamentos; **não edita** entradas; callback é apenas simulado.
+- Auditoria encontrou plano de aceitação ainda com 14 casos, apesar da GUI Scheduler nova. Nova frente adiciona caso 15 e sincroniza recorder, validator, harness PowerShell, testes, README e roadmap.
+- PR #24 aberta e CI Windows #206 SUCCESS no head `15a51e59821209a58931f7a244518464f73673a2`: 78 testes PASS, 14 warnings; validator PowerShell, installer, imports/Tk, EXE build/metadata/startup, ZIP e verificação independente PASS. Artifact 15170310009 (temporário, expira 11-12-2026), SHA-256 `38c8ff1fa4db6531d2b48a9b319ba6894559387bada81e2bd5cb67ad15d71266`.
+- 25 branches presentes após abrir a branch de PR #24 (snapshot da main tinha 24); issues 0 na consulta. Não apagadas branches antigas. Proteção formal main não confirmada; API devolveu protected=false.
+- Releases list vazia; tags não confirmadas (endpoint indisponível).
+- Hardware real, aceitação manual Windows e release pública continuam pendentes; sem ligação ou escrita ECU.
+
 ## 2026-11-26 — Scheduler GUI integrado
 
 - Main após PR #23: `6670fd2e4b89303927fb0b1915b919f54e3f298c`.

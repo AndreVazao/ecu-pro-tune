@@ -79,6 +79,13 @@ This plan covers the user-machine checks that GitHub Actions cannot fully replac
     - Confirm the application remains in simulation/visualization mode.
     - Expected: no ECU flash, physical write, or hardware programming control is present.
 
+15. **Scheduler GUI (simulação)**
+    - Open Scheduler management from the dashboard and select a listed profile.
+    - Create a future schedule; expected: it appears as PENDENTE and refresh does not duplicate or remove it.
+    - Select and cancel that pending entry; expected: it disappears and the cancellation feedback is shown.
+    - Create a second schedule for a near-future time and wait for the simulated callback; expected: the entry becomes CONCLUÍDO and the log states that no hardware action occurred.
+    - Expected: the test remains simulation-only; no ECU/vehicle connection, calibration write or profile change occurs.
+
 ## Result recording
 
 For each case, record PASS/FAIL, Windows edition/build, CPU architecture, Python version, date, and any error output. Do not mark the release as manually accepted until these checks have actually been run on a Windows user machine.
@@ -93,7 +100,7 @@ After executing the cases on the target Windows machine, a structured JSON repor
 For every case, enter PASS, FAIL or SKIP and optionally add notes/evidence. The script records Windows edition/build, architecture, PowerShell version, Python 3.11 availability, UTC timestamp and per-case results under reports\acceptance\.
 
 The overall result is:
-- PASS only when all 14 cases are marked PASS.
+- PASS only when all 15 cases are marked PASS.
 - FAIL when any case is marked FAIL.
 - INCOMPLETE when there are no failures but one or more cases are SKIP.
 
@@ -104,7 +111,7 @@ The recorder does not execute or validate the GUI checks itself. Results must re
 
 O nome do relatório inclui data, hora e milissegundos; se já existir um ficheiro com o mesmo nome, o gravador acrescenta um sufixo para nunca substituir evidência anterior.
 
-Depois de registar os resultados, valida a estrutura, os 14 IDs/títulos, os estados permitidos, os totais recalculados, a data UTC e os metadados do ambiente:
+Depois de registar os resultados, valida a estrutura, os 15 IDs/títulos, os estados permitidos, os totais recalculados, a data UTC e os metadados do ambiente:
 
     $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_windows_acceptance.ps1 -ReportPath $report
@@ -124,7 +131,7 @@ O Windows CI executa também:
 
 Este teste:
 - analisa a sintaxe dos scripts PowerShell de instalação de aceitação e release;
-- cria um relatório sintético 14/14 PASS e confirma que o validador o aceita com -RequirePass;
+- cria um relatório sintético 15/15 PASS e confirma que o validador o aceita com -RequirePass;
 - confirma que um relatório INCOMPLETE é estruturalmente válido, mas bloqueado por -RequirePass;
 - confirma que IDs duplicados e totais inconsistentes são rejeitados.
 
@@ -133,15 +140,15 @@ Os relatórios sintéticos existem apenas no diretório temporário do runner e 
 
 ## Gate final de prontidão para release
 
-Depois de executar os 14 casos no Windows real e validar o relatório, o gate combinado verifica:
+Depois de executar os 15 casos no Windows real e validar o relatório, o gate combinado verifica:
 - integridade do ZIP, manifesto, tamanho e SHA-256;
 - correspondência da versão da aplicação entre o manifesto e o relatório;
-- estrutura e consistência dos 14 casos;
-- resultado global 14/14 PASS.
+- estrutura e consistência dos 15 casos;
+- resultado global 15/15 PASS.
 
 Comando, a partir da raiz do repositório:
 
     $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\check_release_readiness.ps1 -ReleaseDirectory release -AcceptanceReport $report
 
-O comando termina com sucesso apenas quando o pacote está íntegro e o relatório da mesma versão tem todos os 14 casos em PASS. Isto é um gate local de prontidão; não publica automaticamente uma GitHub Release nem substitui a revisão humana das evidências.
+O comando termina com sucesso apenas quando o pacote está íntegro e o relatório da mesma versão tem todos os 15 casos em PASS. Isto é um gate local de prontidão; não publica automaticamente uma GitHub Release nem substitui a revisão humana das evidências.

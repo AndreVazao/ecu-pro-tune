@@ -76,11 +76,12 @@ $expectedCases = @(
     @{ id = 11; title = "Metadados do EXE" },
     @{ id = 12; title = "Extração do ZIP" },
     @{ id = 13; title = "Integridade da release" },
-    @{ id = 14; title = "Fronteira de segurança" }
+    @{ id = 14; title = "Fronteira de segurança" },
+    @{ id = 15; title = "Scheduler GUI (simulação)" }
 )
 
 if ($report.cases -isnot [array] -or $report.cases.Count -ne $expectedCases.Count) {
-    throw "O relatório tem de conter exatamente 14 casos."
+    throw "O relatório tem de conter exatamente $($expectedCases.Count) casos."
 }
 
 $allowedResults = @("PASS", "FAIL", "SKIP")
@@ -130,7 +131,7 @@ if ([int]$report.totals.total -ne $expectedCases.Count -or
     [int]$report.totals.passed -ne $passed -or
     [int]$report.totals.failed -ne $failed -or
     [int]$report.totals.skipped -ne $skipped) {
-    throw "Os totais do relatório não correspondem aos resultados dos 14 casos."
+    throw "Os totais do relatório não correspondem aos resultados dos $($expectedCases.Count) casos."
 }
 
 foreach ($propertyName in @(
@@ -163,6 +164,6 @@ Write-Host "Resultado: $expectedOverall | PASS: $passed | FAIL: $failed | SKIP: 
 Write-Host "Ficheiro: $resolvedReportPath"
 
 if ($RequirePass -and $expectedOverall -ne "PASS") {
-    Write-Error "A aceitação não está completa. O gate exige os 14 casos em PASS."
+    Write-Error "A aceitação não está completa. O gate exige os $($expectedCases.Count) casos em PASS."
     exit 2
 }
