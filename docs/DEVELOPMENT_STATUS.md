@@ -13,10 +13,6 @@
 
 ## 2026-11-26 — Scheduler GUI integrado
 
-# ECU Pro Tune — Development Status
-
-## 2026-11-26 — Scheduler GUI integrado
-
 - Main após PR #23: `6670fd2e4b89303927fb0b1915b919f54e3f298c`.
 - PR #18 strict JSON integrada: `1fae378641740ab9ca61900dc3f24df5c514d885`; CI #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes PASS.
 - PR #21 Scheduler diagnostics integrada: `5f327ffab2405a5100b05a0c5ab633adff371c4c`; CI #181 [45760421245](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760421245) SUCCESS, 73 testes PASS.
