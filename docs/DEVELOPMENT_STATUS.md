@@ -7,7 +7,7 @@
 - PR #23 Scheduler GUI integrada; PR #21 diagnostics, #22 dashboard RPM+load também integradas. PR #19/#20 foram fechadas sem merge por reconciliação com #21/#22.
 - Estado de Scheduler corrigido: UI lista, cria, cancela e refresca agendamentos; **não edita** entradas; callback é apenas simulado.
 - Auditoria encontrou plano de aceitação ainda com 14 casos, apesar da GUI Scheduler nova. Nova frente adiciona caso 15 e sincroniza recorder, validator, harness PowerShell, testes, README e roadmap.
-- 24 branches presentes; sem PRs/issues abertas na consulta. Não apagadas branches antigas. Proteção formal main não confirmada; API devolveu protected=false.
+- 25 branches presentes após abrir a branch de PR #24 (snapshot da main tinha 24); PR #24 aberta; issues 0 na consulta. Não apagadas branches antigas. Proteção formal main não confirmada; API devolveu protected=false.
 - Releases list vazia; tags não confirmadas (endpoint indisponível).
 - Hardware real, aceitação manual Windows e release pública continuam pendentes; sem ligação ou escrita ECU.
 
