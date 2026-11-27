@@ -79,7 +79,7 @@ This plan covers the user-machine checks that GitHub Actions cannot fully replac
     - Confirm the application remains in simulation/visualization mode.
     - Expected: no ECU flash, physical write, or hardware programming control is present.
 
-15. **Scheduler GUI (simulation only)**
+15. **Scheduler GUI (simulação)**
     - Open Scheduler management from the dashboard and select a listed profile.
     - Create a future schedule; expected: it appears as PENDING and refresh does not duplicate or remove it.
     - Select and cancel that pending entry; expected: it disappears and the cancellation feedback is shown.
@@ -111,7 +111,7 @@ The recorder does not execute or validate the GUI checks itself. Results must re
 
 O nome do relatório inclui data, hora e milissegundos; se já existir um ficheiro com o mesmo nome, o gravador acrescenta um sufixo para nunca substituir evidência anterior.
 
-Depois de registar os resultados, valida a estrutura, os 14 IDs/títulos, os estados permitidos, os totais recalculados, a data UTC e os metadados do ambiente:
+Depois de registar os resultados, valida a estrutura, os 15 IDs/títulos, os estados permitidos, os totais recalculados, a data UTC e os metadados do ambiente:
 
     $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_windows_acceptance.ps1 -ReportPath $report
@@ -140,11 +140,11 @@ Os relatórios sintéticos existem apenas no diretório temporário do runner e 
 
 ## Gate final de prontidão para release
 
-Depois de executar os 14 casos no Windows real e validar o relatório, o gate combinado verifica:
+Depois de executar os 15 casos no Windows real e validar o relatório, o gate combinado verifica:
 - integridade do ZIP, manifesto, tamanho e SHA-256;
 - correspondência da versão da aplicação entre o manifesto e o relatório;
 - estrutura e consistência dos 14 casos;
-- resultado global 14/14 PASS.
+- resultado global 15/15 PASS.
 
 Comando, a partir da raiz do repositório:
 
