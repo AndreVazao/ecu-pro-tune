@@ -32,7 +32,7 @@ def test_add_schedule_appends_valid_entries(
     [
         ("", datetime.now().isoformat()),
         ("../outside.json", datetime.now().isoformat()),
-        (r"..\outside.json", datetime.now().isoformat()),
+        (r"..\\outside.json", datetime.now().isoformat()),
         ("stage1.json", "not-a-date"),
     ],
 )
@@ -138,6 +138,64 @@ def test_scheduler_logs_callback_failure_and_keeps_schedule_pending(
     assert any(
         "retry.json" in record.getMessage()
         and "novamente tentado" in record.getMessage()
+        and record.exc_info is not None
+        for record in caplog.records
+    )
+
+
+def test_scheduler_retries_failed_callback_and_persists_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """A failed callback stays pending and is retried on the next scheduler pass."""
+    schedule_file = tmp_path / "schedules.json"
+    schedule_file.write_text(
+        json.dumps(
+            [
+                {
+                    "profile": "recover.json",
+                    "run_at": (datetime.now() - timedelta(minutes=1)).isoformat(),
+                    "executed": False,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(scheduler_module, "SCHEDULE_FILE", schedule_file)
+    logger = logging.getLogger("ecu-scheduler-retry-success-test")
+    caplog.set_level(logging.ERROR, logger=logger.name)
+    attempts: list[str] = []
+    scheduler: Scheduler
+
+    class StopEvent:
+        def __init__(self) -> None:
+            self.stopped = False
+
+        def is_set(self) -> bool:
+            return self.stopped
+
+        def set(self) -> None:
+            self.stopped = True
+
+        def wait(self, _timeout: float) -> bool:
+            return self.stopped
+
+    def callback(profile: str) -> None:
+        attempts.append(profile)
+        if len(attempts) == 1:
+            raise RuntimeError("temporary failure before recovery")
+        scheduler.stop()
+
+    scheduler = Scheduler(callback, logger=logger)
+    scheduler._stop_event = StopEvent()  # type: ignore[assignment]
+    scheduler.run()
+
+    data = json.loads(schedule_file.read_text(encoding="utf-8"))
+    assert attempts == ["recover.json", "recover.json"]
+    assert data[0]["executed"] is True
+    assert any(
+        "recover.json" in record.getMessage()
         and record.exc_info is not None
         for record in caplog.records
     )
