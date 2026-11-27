@@ -151,4 +151,4 @@ Comando, a partir da raiz do repositório:
     $report = Get-ChildItem reports\acceptance\ECUProTune-Acceptance-*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
     powershell -NoProfile -ExecutionPolicy Bypass -File scripts\check_release_readiness.ps1 -ReleaseDirectory release -AcceptanceReport $report
 
-O comando termina com sucesso apenas quando o pacote está íntegro e o relatório da mesma versão tem todos os 14 casos em PASS. Isto é um gate local de prontidão; não publica automaticamente uma GitHub Release nem substitui a revisão humana das evidências.
+O comando termina com sucesso apenas quando o pacote está íntegro e o relatório da mesma versão tem todos os 15 casos em PASS. Isto é um gate local de prontidão; não publica automaticamente uma GitHub Release nem substitui a revisão humana das evidências.
