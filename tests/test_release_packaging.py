@@ -149,14 +149,16 @@ def test_windows_acceptance_recorder_captures_all_fourteen_cases() -> None:
         encoding="utf-8"
     )
 
-    assert script.count("@{ id = ") == 14
+    assert script.count("@{ id = ") == 15
     assert "PASS" in script and "FAIL" in script and "SKIP" in script
     assert "overall_result = $overall" in script
     assert "recorded_at_utc" in script
     assert "os_build = $os.BuildNumber" in script
     assert "python_311 = $python311" in script
     assert "ECUProTune-Acceptance-$timestamp.json" in script
-    assert "14." in plan
+    assert "15." in plan
+    assert "Scheduler GUI (simulação)" in script
+    assert "Scheduler GUI (simulação)" in plan
 
 
 
@@ -208,7 +210,8 @@ def test_windows_ci_executes_powerShell_acceptance_validator_integration_suite()
     assert "test_windows_acceptance_validator.ps1" in workflow
     assert harness.is_file()
     assert "Parser]::ParseFile" in harness_text
-    assert "valid 14/14 report accepted" in harness_text
+    assert "valid 15/15 report accepted" in harness_text
+    assert "Scheduler GUI (simulação)" in harness_text
     assert "RequirePass" in harness_text
     assert "duplicate case IDs are rejected" in harness_text
     assert "inconsistent totals are rejected" in harness_text

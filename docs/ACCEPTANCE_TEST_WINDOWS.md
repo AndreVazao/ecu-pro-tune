@@ -79,6 +79,13 @@ This plan covers the user-machine checks that GitHub Actions cannot fully replac
     - Confirm the application remains in simulation/visualization mode.
     - Expected: no ECU flash, physical write, or hardware programming control is present.
 
+15. **Scheduler GUI (simulation only)**
+    - Open Scheduler management from the dashboard and select a listed profile.
+    - Create a future schedule; expected: it appears as PENDING and refresh does not duplicate or remove it.
+    - Select and cancel that pending entry; expected: it disappears and the cancellation feedback is shown.
+    - Create a second schedule for a near-future time and wait for the simulated callback; expected: the entry becomes COMPLETED and the log states that no hardware action occurred.
+    - Expected: the test remains simulation-only; no ECU/vehicle connection, calibration write or profile change occurs.
+
 ## Result recording
 
 For each case, record PASS/FAIL, Windows edition/build, CPU architecture, Python version, date, and any error output. Do not mark the release as manually accepted until these checks have actually been run on a Windows user machine.
@@ -93,7 +100,7 @@ After executing the cases on the target Windows machine, a structured JSON repor
 For every case, enter PASS, FAIL or SKIP and optionally add notes/evidence. The script records Windows edition/build, architecture, PowerShell version, Python 3.11 availability, UTC timestamp and per-case results under reports\acceptance\.
 
 The overall result is:
-- PASS only when all 14 cases are marked PASS.
+- PASS only when all 15 cases are marked PASS.
 - FAIL when any case is marked FAIL.
 - INCOMPLETE when there are no failures but one or more cases are SKIP.
 
@@ -124,7 +131,7 @@ O Windows CI executa também:
 
 Este teste:
 - analisa a sintaxe dos scripts PowerShell de instalação de aceitação e release;
-- cria um relatório sintético 14/14 PASS e confirma que o validador o aceita com -RequirePass;
+- cria um relatório sintético 15/15 PASS e confirma que o validador o aceita com -RequirePass;
 - confirma que um relatório INCOMPLETE é estruturalmente válido, mas bloqueado por -RequirePass;
 - confirma que IDs duplicados e totais inconsistentes são rejeitados.
 

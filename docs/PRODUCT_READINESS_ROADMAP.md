@@ -1,98 +1,98 @@
 # ECU Pro Tune — Roadmap global de prontidão
 
-**Auditoria:** 26-11-2026 (UTC)  
+**Auditoria:** 27-11-2026 (UTC)  
 **Repositório:** [AndreVazao/ecu-pro-tune](https://github.com/AndreVazao/ecu-pro-tune)  
-**Branch principal confirmada:** `main`  
-**SHA da main no início da auditoria:** `d0eb6b2a0c6a2ddc468ddf8b911bc626ac0d5da2`  
-**SHA atual após PR #23:** `6670fd2e4b89303927fb0b1915b919f54e3f298c`  
+**Branch principal:** `main`  
+**SHA confirmado:** `574813fb3ad8f90ad5f34af0a7fd2967c2c8d4ee`  
 **Versão declarada:** 0.1.0
 
-Este documento acompanha o produto completo, não apenas uma PR ou branch. Os estados são baseados em código, documentação, API do GitHub e resultados de CI observados. «Implementado» não significa aceitação manual nem validação em ECU.
+Este roadmap é reconciliado com código, documentação, GitHub e CI. Não confunde funcionalidades implementadas com aceitação manual, release publicada ou validação física.
 
 ## Estado global
 
-**Classificação:** protótipo desktop / demonstração simulada; ainda não aceite para release de utilizador final.
+**Classificação:** protótipo desktop/simulador funcional; ainda não aceite para distribuição final a utilizadores.
 
 | Área | Estado | Evidência / lacuna |
 |---|---|---|
-| GUI desktop | Implementada | ttkbootstrap/Tk; CI constrói o dashboard; falta aceitação interativa em Windows de utilizador |
-| Performance / Showcase | Implementados | Modos presentes na seleção e dashboard |
-| Dashboard | Simulação local | RPM e load em séries distintas com escalas explícitas; janela nominal 36 s; sem telemetria real |
-| Perfis e mapas | Implementados | JSON, editor numérico, validação e carregamento; validação manual pendente |
-| Backup / rollback | Implementados | cópia/restauro, nomes seguros, backup sem sobrescrever no mesmo segundo e testes de backup corrompido |
-| Scheduler | Core + GUI simulada | Gestão de agendamentos na GUI: listar, criar, atualizar e cancelar; callbacks apenas simulados, sem escrita ECU |
-| Logs | Implementados | Rotação UTF-8; falhas de callback/storage do Scheduler registadas com traceback e retry pendente |
-| Instalação | CI validado | smoke do instalador em Windows CI; instalação no PC de utilizador por confirmar |
-| Build / pacote | CI validado | PyInstaller onedir, metadados Windows, ZIP, manifest e SHA-256 |
-| Aceitação manual | PENDENTE | 14 casos; não existe relatório de aceitação real 14/14 PASS no repositório |
-| Release publicada | NÃO | API de GitHub Releases devolveu lista vazia nesta auditoria |
-| Hardware ECU | FORA DO ÂMBITO ATUAL | Sem driver de escrita, flash ou programação; nenhuma validação física efetuada |
+| GUI desktop | Implementada | ttkbootstrap/Tk; Windows CI constrói dashboard e painel Scheduler; aceitação interativa de utilizador pendente |
+| Modos Performance / Showcase | Implementados | Seleção de modo e apresentação no dashboard |
+| Dashboard | Simulação | RPM + load em séries e escalas separadas; janela nominal 36 s; não é telemetria real |
+| Perfis / mapas | Implementados | JSON estrito, editor numérico e validação; aceitação manual pendente |
+| Backup / rollback | Implementados | Backup/restauro com validação e preservação de ficheiros inválidos; CI/testes |
+| Scheduler | Core + GUI simulada | Listar, criar, cancelar e refrescar; não há edição de agendamento na GUI; callback apenas regista conclusão simulada |
+| Logging | Implementado | Rotação UTF-8; falhas callback/storage com traceback e retry; dados ilegíveis preservados |
+| Instalação | CI validado | Smoke em runner Windows limpo; instalação e operação prolongada no PC do utilizador ainda pendentes |
+| Build / pacote | CI validado | PyInstaller onedir, versão EXE, ZIP, manifest e SHA-256 |
+| Aceitação manual | PENDENTE | 15 casos; não existe relatório real 15/15 PASS |
+| Release GitHub | NÃO PUBLICADA | Lista de releases consultada vazia |
+| Tags | NÃO CONFIRMADAS | Endpoint de tags/refs não foi disponibilizado nesta verificação; não assumir inexistência |
+| Hardware ECU | FORA DO ÂMBITO | Sem driver de escrita, flashing ou ligação a ECU; não testado em hardware |
 
 ## Arquitetura observada
 
-- **Interface:** `src/app` — seleção de modo, dashboard, navegação para perfis/mapas.
-- **Serviços core:** `src/core` — ECUManager (ficheiros de configuração e mapas), ProfileManager, RollbackManager, Scheduler, SoundManager e Logger.
-- **Tuning / visualização:** `src/tuning` — editor de mapas numéricos, validators, live graphs e tuning panel.
-- **Dados:** `configs/`, `maps/`, perfis guardados, backups, scheduler e logs locais em JSON/ficheiros.
-- **Empacotamento:** instalador Windows baseado em Python 3.11, build PyInstaller onedir, ZIP versionado, manifest e checksum.
-- **CI:** `.github/workflows/windows-ci.yml` — Windows latest / Python 3.11, dependências, pip check, compileall, pytest, PowerShell acceptance-validator, installer smoke, imports, construção Tk, EXE, startup smoke, pacote e verificação independente.
-- **Integrações:** não foi observado backend, API de telemetria, driver de ECU, flashing, escrita de hardware nem ligação a veículo.
+- **Interface:** `src/app` — seleção de modo, dashboard, navegação e painel Scheduler.
+- **Core:** `src/core` — ECUManager, ProfileManager, RollbackManager, Scheduler, SoundManager e Logger.
+- **Tuning/visualização:** `src/tuning` — editor numérico, validators, graphs e tuning panel.
+- **Dados locais:** `configs/`, `maps/`, perfis guardados, backups, Scheduler e logs; ficheiros JSON.
+- **Instalação/build:** Python 3.11, ambiente virtual, installer batch, PyInstaller onedir e ZIP versionado.
+- **CI:** `.github/workflows/windows-ci.yml` — dependências, pip check, compileall, pytest, PowerShell acceptance validator, installer smoke, imports, Tk construction, EXE build/metadata/startup, ZIP e verificação independente.
+- **Integrações:** não foi observado backend, API de telemetria, driver ECU, flashing, escrita física ou ligação a veículo.
 
-## Evidência GitHub desta auditoria
+## Revalidação GitHub
 
-- Main atual: `6670fd2e4b89303927fb0b1915b919f54e3f298c` após integração de PR #23 em 26-11-2026.
-- PR #18 — [strict JSON/profile loading](https://github.com/AndreVazao/ecu-pro-tune/pull/18): integrada em 26-11-2026 no commit `1fae378641740ab9ca61900dc3f24df5c514d885`; CI Windows run [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS; 75 testes passaram.
-- PR #21 — [Scheduler diagnostics](https://github.com/AndreVazao/ecu-pro-tune/pull/21): integrada; CI #181 SUCCESS, 73 testes PASS.
-- PR #22 — [dashboard RPM + load](https://github.com/AndreVazao/ecu-pro-tune/pull/22): integrada; CI #182 SUCCESS, 77 testes PASS.
-- PR #23 — [Scheduler GUI](https://github.com/AndreVazao/ecu-pro-tune/pull/23): integrada; CI #183 SUCCESS, 78 testes PASS. Main push CI #45761702198 em execução neste checkpoint.
-- A proteção formal de `main` não foi reavaliada nesta ronda.
-- Issues independentes abertas: não reavaliadas neste checkpoint.
-- CI main: run [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) SUCCESS; run #155 [45049828933](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45049828933) foi revalidado: 59 testes passaram em 0.23s; build/package gates também SUCCESS.
-- Releases: lista vazia. A listagem de tags não foi suportada pelo endpoint/fetch utilizado; tags não ficam confirmadas nesta ronda.
-- Dependências: `requirements.txt` tem versões parcialmente fixadas e ranges, mas não existe lockfile completo identificado.
+- Main: `574813fb3ad8f90ad5f34af0a7fd2967c2c8d4ee`, commit de 26-11-2026; CI push run #200 [45761769528](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761769528) **SUCCESS**.
+- Run #200: **78 testes passaram**, 14 warnings; compileall, PowerShell validator, installer smoke, imports, Tk, PyInstaller, EXE metadata, packaged startup, ZIP, independent verification e artifact upload PASS.
+- Artefacto CI #200: [15089144559](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761769528/artifacts/15089144559), temporário (14 dias); não é release permanente.
+- PR #18 strict JSON: merged; run #173 [45499716011](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45499716011) SUCCESS, 75 testes.
+- PR #21 Scheduler diagnostics: merged; run #181 [45760421245](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760421245) SUCCESS, 73 testes.
+- PR #22 dashboard RPM + load: merged; run #182 [45760551886](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760551886) SUCCESS, 77 testes.
+- PR #23 Scheduler GUI: merged; run #183 [45761454999](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761454999) SUCCESS, 78 testes.
+- PRs #19 e #20 foram fechadas sem merge; o trabalho reconciliado foi integrado por #21 e #22. Não há PRs abertas neste checkpoint.
+- Issues abertas: 0 na API consultada.
+- Branches: 24, incluindo main e branches históricas. API indicou `protected=false` em todas as branches devolvidas; proteção formal da main não confirmada. Branches históricas não foram eliminadas.
+- Releases: 0 na listagem. Tags não confirmadas, devido à falha/indisponibilidade do endpoint de tags.
 
-## Critérios objetivos para ECU Pro Tune 0.1.0
+## Critérios de prontidão 0.1.0
 
-### Gate A — Core e segurança de dados
+### Gate A — Core e integridade de dados
 
-- [x] Perfil/mapa/backup/scheduler com validação básica e testes de regressão existentes.
-- [x] Backup/restauro com validação de caminho e preservação de backup inválido.
-- [ ] PR #18 de JSON estrito integrada, com CI verde no head final.
-- [ ] Testes de recuperação e integridade de dados abrangendo todos os fluxos de leitura/gravação relevantes.
-- [ ] Diagnóstico de falhas de scheduler verificável em logs (branch independente em curso).
+- [x] Perfil/mapa/backup/rollback com validação e testes.
+- [x] JSON estrito integrado.
+- [x] Scheduler com persistência, IDs novos, compatibilidade legacy, locking, cancelamento e logging.
+- [ ] Expandir testes de recuperação e integridade em todos os fluxos de leitura/escrita; revisar concorrência e corrupção.
+- [ ] Avaliar segurança/dependências e documentar política de atualização.
 
 ### Gate B — UX e operação desktop
 
 - [x] Modos Performance e Showcase.
-- [x] Dashboard de simulação, navegação e painel de perfis/mapas.
-- [ ] Aceitação interativa dos 14 casos em Windows real.
-- [x] Agendamento disponível na interface com listagem, criação, estado, cancelamento e feedback; execução do callback permanece explicitamente simulada.
-- [ ] Corrigir discrepâncias de UI documentadas/confirmadas durante revisão (por exemplo, a legenda do gráfico afirma RPM + load, mas o histórico desenhado contém apenas RPM; a duração indicada também deve corresponder à cadência real).
+- [x] Dashboard simulado com RPM/load e janela temporal coerentes.
+- [x] GUI Scheduler: listar, criar, cancelar, estado, refresh automático; execução é somente simulada.
+- [ ] Aceitação interativa dos 15 casos em Windows real, incluindo Scheduler.
+- [ ] Avaliar experiência prolongada, responsividade e mensagens de erro no PC de utilizador.
 
 ### Gate C — Instalação e distribuição
 
-- [x] Installer smoke no runner Windows.
-- [x] CI verifica dependências, imports, GUI construction, build PyInstaller, metadados EXE e arranque breve.
-- [x] Empacotamento versionado e verificação independente de ZIP/manifest/SHA-256.
-- [ ] Testes manuais de instalação, extração em caminho com espaços e operação prolongada em Windows de utilizador.
-- [ ] Relatório de aceitação manual 14/14 PASS; o gate não pode ser satisfeito por relatório sintético.
-- [ ] Rever e aprovar release notes, pacote e checksum antes de qualquer publicação; publicar apenas com aprovação explícita.
+- [x] Installer smoke em Windows CI e pip check.
+- [x] Import/Tk construction e startup smoke do EXE.
+- [x] Build PyInstaller, metadata, ZIP, manifest, SHA-256 e verificação independente.
+- [ ] Instalação/extração e operação prolongada no Windows do utilizador.
+- [ ] Relatório de aceitação real 15/15 PASS.
+- [ ] Revisão/aprovação explícita das release notes, pacote e checksum; publicação não automática.
 
-### Gate D — Segurança e limites de produto
+### Gate D — Segurança e limites de ECU
 
-- [x] Código/documentação confirmam simulação e visualização; não foi observado caminho de escrita física ou flash.
-- [x] CI e testes permanecem em fixtures, dados sintéticos e ambiente Windows de build.
-- [ ] Avaliação de segurança/dependências e processo de atualização/release documentados com evidência.
-- [ ] Qualquer integração futura com ECU exige autorização explícita, arquitetura isolada, fail-closed, bancada identificada e plano de validação próprio. Não é um critério para aceitar a versão simulada e não deve ser implementada implicitamente.
+- [x] Código e documentação permanecem em simulação/gestão; não há driver flash nem escrita física observada.
+- [x] CI usa fixtures e runner de build; não liga ECU ou veículo.
+- [ ] Qualquer futura integração de hardware exige autorização explícita, arquitetura isolada, fail-closed, bancada claramente identificada, procedimento e validação próprios. Não é requisito implícito desta versão simulada.
 
 ## Próximas frentes independentes
 
-1. **Revisão de integridade de dados:** PR #18 integrada; ampliar testes de recuperação e integridade em todos os fluxos de leitura/gravação.
-2. **Diagnóstico operacional:** PR #21 integrada; strict JSON e logging de callback/storage estão na main, com 73 testes PASS no CI #181.
-3. **Correção UX do dashboard:** tornar legenda e janela temporal do gráfico RPM precisas, ou implementar a segunda série de load com escala explicitamente definida e testes.
-4. **Scheduler UX:** PR #23 integrada; próxima melhoria é validação interativa e usabilidade em Windows real.
-5. **Aceitação manual:** executar e registar os 14 casos em Windows real quando o ambiente estiver disponível; não marcar PASS por inferência.
+1. **Aceitação Windows:** executar e registar os 15 casos reais; nunca usar fixture CI como aceitação do utilizador.
+2. **Integridade:** ampliar testes de corrupção/recuperação de perfis, mapas, backups e scheduler; investigar concorrência de persistência.
+3. **Dependências:** avaliar ranges atuais e lock/constraints reproduzíveis; sem atualizar dependências automaticamente nem criar custos.
+4. **Operação desktop:** avaliar logs, erros e operação prolongada no Windows de utilizador.
+5. **Release:** rever versão, changelog, pacote e hash apenas depois de gates; aguardar aprovação explícita.
 
 ## Regra de conclusão
 
-A prontidão 0.1.0 só é declarada quando os gates A–C estiverem satisfeitos, a aceitação manual real for 14/14 PASS, o relatório tiver evidência e o pacote/version/hash corresponderem. CI verde, preview, artefacto temporário ou testes sintéticos, isoladamente, não equivalem a release aceite. Não publicar tag/release nem iniciar hardware sem aprovação explícita.
+A prontidão 0.1.0 só é declarada quando os gates A–C estiverem satisfeitos, a aceitação manual real for 15/15 PASS, o relatório tiver evidência verificável e pacote/version/hash corresponderem. CI verde, preview ou artefacto temporário não substituem aceitação manual. Hardware ECU permanece fora do âmbito sem autorização explícita.
