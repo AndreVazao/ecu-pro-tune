@@ -47,9 +47,9 @@ Este roadmap é reconciliado com código, documentação, GitHub e CI. Não conf
 - PR #21 Scheduler diagnostics: merged; run #181 [45760421245](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760421245) SUCCESS, 73 testes.
 - PR #22 dashboard RPM + load: merged; run #182 [45760551886](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760551886) SUCCESS, 77 testes.
 - PR #23 Scheduler GUI: merged; run #183 [45761454999](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761454999) SUCCESS, 78 testes.
-- PRs #19 e #20 foram fechadas sem merge; o trabalho reconciliado foi integrado por #21 e #22. Não há PRs abertas neste checkpoint.
+- PRs #19 e #20 foram fechadas sem merge; o trabalho reconciliado foi integrado por #21 e #22. PR #24 está aberta para sincronizar a aceitação manual do Scheduler.
 - Issues abertas: 0 na API consultada.
-- Branches: 24, incluindo main e branches históricas. API indicou `protected=false` em todas as branches devolvidas; proteção formal da main não confirmada. Branches históricas não foram eliminadas.
+- Branches: 25 agora (24 no snapshot da main antes da branch da PR #24), incluindo main e branches históricas. API indicou `protected=false` em todas as branches devolvidas; proteção formal da main não confirmada. Branches históricas não foram eliminadas.
 - Releases: 0 na listagem. Tags não confirmadas, devido à falha/indisponibilidade do endpoint de tags.
 
 ## Critérios de prontidão 0.1.0
