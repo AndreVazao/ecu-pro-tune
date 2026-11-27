@@ -143,7 +143,7 @@ Os relatórios sintéticos existem apenas no diretório temporário do runner e 
 Depois de executar os 15 casos no Windows real e validar o relatório, o gate combinado verifica:
 - integridade do ZIP, manifesto, tamanho e SHA-256;
 - correspondência da versão da aplicação entre o manifesto e o relatório;
-- estrutura e consistência dos 14 casos;
+- estrutura e consistência dos 15 casos;
 - resultado global 15/15 PASS.
 
 Comando, a partir da raiz do repositório:
