@@ -48,6 +48,7 @@ Este roadmap é reconciliado com código, documentação, GitHub e CI. Não conf
 - PR #22 dashboard RPM + load: merged; run #182 [45760551886](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45760551886) SUCCESS, 77 testes.
 - PR #23 Scheduler GUI: merged; run #183 [45761454999](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45761454999) SUCCESS, 78 testes.
 - PRs #19 e #20 foram fechadas sem merge; o trabalho reconciliado foi integrado por #21 e #22. PR #24 está aberta para sincronizar a aceitação manual do Scheduler.
+- PR #24 — CI Windows run #206 [45933164869](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45933164869) SUCCESS no head `15a51e59821209a58931f7a244518464f73673a2`: 78 testes PASS, 14 warnings; PowerShell acceptance harness, installer, imports/Tk, PyInstaller, EXE metadata, startup, ZIP e verificação independente PASS. Artefacto temporário [15170310009](https://github.com/AndreVazao/ecu-pro-tune/actions/runs/45933164869/artifacts/15170310009), SHA-256 `38c8ff1fa4db6531d2b48a9b319ba6894559387bada81e2bd5cb67ad15d71266`, expira 11-12-2026.
 - Issues abertas: 0 na API consultada.
 - Branches: 25 agora (24 no snapshot da main antes da branch da PR #24), incluindo main e branches históricas. API indicou `protected=false` em todas as branches devolvidas; proteção formal da main não confirmada. Branches históricas não foram eliminadas.
 - Releases: 0 na listagem. Tags não confirmadas, devido à falha/indisponibilidade do endpoint de tags.
