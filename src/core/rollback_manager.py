@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import json
 import re
 from datetime import datetime
 from pathlib import Path
 
+from src.utils.json_utils import strict_json_loads
 from src.utils.paths import BACKUPS_DIR, CONFIGS_DIR, ensure_directories
 
 
@@ -12,9 +12,6 @@ _BACKUP_PATTERN = re.compile(
     r"^(?P<profile>.+\.json)_(?P<date>\d{8})_(?P<time>\d{6})(?:_(?P<sequence>\d{3}))?\.bak\.json$"
 )
 
-
-def _reject_nonstandard_json_constant(value: str) -> None:
-    raise ValueError(f"Valor JSON não permitido: {value}")
 
 
 class RollbackManager:
@@ -91,11 +88,8 @@ class RollbackManager:
 
         try:
             backup_text = src.read_text(encoding="utf-8")
-            restored_data = json.loads(
-                backup_text,
-                parse_constant=_reject_nonstandard_json_constant,
-            )
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
+            restored_data = strict_json_loads(backup_text)
+        except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ValueError("O backup não contém JSON válido.") from exc
         if not isinstance(restored_data, dict):
             raise ValueError("O backup não contém um objeto JSON.")
