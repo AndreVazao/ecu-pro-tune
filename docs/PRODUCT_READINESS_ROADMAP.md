@@ -96,3 +96,12 @@ Este documento acompanha o produto completo, não apenas uma PR ou branch. Os es
 ## Regra de conclusão
 
 A prontidão 0.1.0 só é declarada quando os gates A–C estiverem satisfeitos, a aceitação manual real for 14/14 PASS, o relatório tiver evidência e o pacote/version/hash corresponderem. CI verde, preview, artefacto temporário ou testes sintéticos, isoladamente, não equivalem a release aceite. Não publicar tag/release nem iniciar hardware sem aprovação explícita.
+
+
+## 2026-11-28 — Integridade numérica no restauro de backups
+
+- A revisão do código da main `574813fb3ad8f90ad5f34af0a7fd2967c2c8d4ee` encontrou uma diferença entre os leitores JSON: `ProfileManager`/`ECUManager` usam `strict_json_loads`, mas `RollbackManager.restore_backup` usava apenas `json.loads(parse_constant=...)`.
+- Em Python, o literal JSON numérico `1e999` é aceite por `json.loads` como infinito (`inf`), apesar de não ser finito. Um backup assim podia ser restaurado e substituir um perfil válido por dados que os leitores estritos seguintes recusariam.
+- Correção proposta na branch `fix/rollback-strict-json-restore-20261128`: o restauro passa a usar o mesmo `strict_json_loads` que os restantes fluxos, antes de escrever/substituir o perfil.
+- Testes de regressão acrescentam backups com `1e999` e `-1e999`; o teste confirma rejeição, preservação do perfil existente e ausência de ficheiro temporário residual.
+- Estado: alteração isolada em branch própria; ainda não integrada. O CI da PR e a revisão permanecem critérios separados. Sem alterações à main, aos backups reais ou a hardware ECU.
